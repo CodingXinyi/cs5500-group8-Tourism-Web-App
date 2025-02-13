@@ -1,4 +1,5 @@
-# Getting Started with Create React App
+# Frontend
+## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
@@ -44,3 +45,14 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+# Backend
+## API
+This web-based platform enables admins to manage tourism spot posts (create, read, update, delete) and allows users to star their favorite spots. It aims to ensure a seamless user experience, maintain data integrity, and support scalability. 
+
+# Command to run the server
+```npx nodemon server/api.js```
+
+# Command to run the prisma studio
+```npx prisma studio --schema=server/prisma/schema.prisma```
+
