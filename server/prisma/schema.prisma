@@ -1,0 +1,46 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Post {
+  id        Int  @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  postName            String   @db.VarChar(255)
+  locationState       String   @db.VarChar(100)
+  locationCity        String   @db.VarChar(100)
+  exactLocation       String   @db.VarChar(255)
+  postDetailDescription String @db.Text
+  pictureUrl          String   @db.VarChar(500)
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  starredBy  StarredPost[]
+}
+
+model User {
+  id      Int      @id @default(autoincrement())
+  email   String   @unique
+  name    String?
+  preferredName String?  // New column added
+  posts  Post[]
+  starredPosts  StarredPost[]
+}
+
+model StarredPost {
+  id      Int  @id @default(autoincrement())
+  user    User @relation(fields: [userId], references: [id])
+  userId  Int
+  post    Post @relation(fields: [postId], references: [id])
+  postId  Int
+  createdAt DateTime @default(now())
+
+  @@unique([userId, postId]) // Ensures a user can only star a post once
+}
