@@ -82,6 +82,21 @@ app.get("/posts/:postId/comments", async (req, res) => {
   }
 });
 
+// 删除评论
+app.delete("/comments/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await prisma.postComment.delete({
+      where: {
+        id: parseInt(id)
+      }
+    });
+    res.json({ message: "评论已成功删除。" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "删除评论失败。" });
+  }
+});
 
 
 app.listen(8000, () => {
