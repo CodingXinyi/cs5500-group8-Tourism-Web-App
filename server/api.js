@@ -54,6 +54,35 @@ app.post("/comments", async (req, res) => {
   }
 });
 
+// Get all comments for a specific post
+app.get("/posts/:postId/comments", async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const comments = await prisma.postComment.findMany({
+      where: {
+        postId: parseInt(postId)
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true
+          }
+        }
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
+    res.json(comments);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "获取评论失败。" });
+  }
+});
+
+
 
 app.listen(8000, () => {
   console.log("Server running on http://localhost:8000 🎉 🚀");
