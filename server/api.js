@@ -32,6 +32,28 @@ app.post("/user", async (req, res) => {
   }
 });
 
+// Create a Comment
+app.post("/comments", async (req, res) => {
+  try {
+    const { userId, postId, comment } = req.body;
+    const newComment = await prisma.postComment.create({
+      data: {
+        userId,
+        postId,
+        comment
+      },
+      include: {
+        user: true,
+        post: true
+      }
+    });
+    res.json(newComment);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "创建评论失败。" });
+  }
+});
+
 
 app.listen(8000, () => {
   console.log("Server running on http://localhost:8000 🎉 🚀");
