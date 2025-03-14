@@ -50,7 +50,7 @@ app.post("/comments", async (req, res) => {
     res.json(newComment);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "创建评论失败。" });
+    res.status(500).json({ error: "failed to create comment" });
   }
 });
 
@@ -78,7 +78,7 @@ app.get("/posts/:postId/comments", async (req, res) => {
     res.json(comments);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "获取评论失败。" });
+    res.status(500).json({ error: "failed to get comments" });
   }
 });
 
@@ -91,10 +91,10 @@ app.delete("/comments/:id", async (req, res) => {
         id: parseInt(id)
       }
     });
-    res.json({ message: "评论已成功删除。" });
+    res.json({ message: "comment deleted successfully" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "删除评论失败。" });
+    res.status(500).json({ error: "failed to delete comment" });
   }
 });
 
