@@ -18,16 +18,17 @@ const prisma = new PrismaClient();
 // Create a Tweet Item
 app.post("/user", async (req, res) => {
   try {
-    const { email, name, preferredName } = req.body;
+    const { email, name} = req.body;
     const tweet = await prisma.user.create({
       data: {
         email : email,
         name : name, 
-        preferredName : preferredName
+        // preferredName : preferredName
       },
     });
     res.json(tweet);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Failed to create user." });
   }
 });
