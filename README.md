@@ -54,7 +54,7 @@ This web-based platform enables admins to manage tourism spot posts (create, rea
 ```npx nodemon server/api.js```
 
 # Command to run the prisma studio
-```npx prisma studio --schema=prisma/schema.prisma```
+```npx prisma studio --schema=server/prisma/schema.prisma```
 
 
 
