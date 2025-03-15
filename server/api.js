@@ -33,6 +33,40 @@ app.post("/user", async (req, res) => {
   }
 });
 
+// Create a Post
+app.post("/posts", async (req, res) => {
+  try {
+    const { 
+      userId, 
+      postName, 
+      locationState, 
+      locationCity, 
+      exactLocation, 
+      postDetailDescription, 
+      pictureUrl 
+    } = req.body;
+    
+    const newPost = await prisma.post.create({
+      data: {
+        userId,
+        postName,
+        locationState,
+        locationCity,
+        exactLocation,
+        postDetailDescription,
+        pictureUrl
+      },
+      include: {
+        user: true
+      }
+    });
+    res.json(newPost);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "创建帖子失败" });
+  }
+});
+
 // Create a Comment
 app.post("/comments", async (req, res) => {
   try {
