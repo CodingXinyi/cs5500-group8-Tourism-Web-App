@@ -67,6 +67,37 @@ app.post("/posts", async (req, res) => {
   }
 });
 
+// Update a post 
+app.put("/posts/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updateData = req.body;
+    
+    updateData.updatedAt = new Date();
+    
+    const updatedPost = await prisma.post.update({
+      where: {
+        id: parseInt(id)
+      },
+      data: updateData,
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true
+          }
+        }
+      }
+    });
+    
+    res.json(updatedPost);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "failed to update post" });
+  }
+});
+
 // Create a Comment
 app.post("/comments", async (req, res) => {
   try {
@@ -164,6 +195,7 @@ app.put("/comments/:id", async (req, res) => {
     res.status(500).json({ error: "failed to update comment" });
   }
 });
+
 
 app.listen(8000, () => {
   console.log("Server running on http://localhost:8000 🎉 🚀");
