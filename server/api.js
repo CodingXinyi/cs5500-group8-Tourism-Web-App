@@ -83,7 +83,7 @@ app.get("/posts/:postId/comments", async (req, res) => {
   }
 });
 
-// 删除评论
+// delete comment
 app.delete("/comments/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -99,6 +99,37 @@ app.delete("/comments/:id", async (req, res) => {
   }
 });
 
+// update comment
+app.put("/comments/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { comment } = req.body;
+    
+    const updatedComment = await prisma.postComment.update({
+      where: {
+        id: parseInt(id)
+      },
+      data: {
+        comment,
+        createdAt: new Date()
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true
+          }
+        }
+      }
+    });
+    
+    res.json(updatedComment);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "failed to update comment" });
+  }
+});
 
 app.listen(8000, () => {
   console.log("Server running on http://localhost:8000 🎉 🚀");
