@@ -98,6 +98,113 @@ app.put("/posts/:id", async (req, res) => {
   }
 });
 
+// get all posts
+app.get("/posts", async (req, res) => {
+  try {
+    const posts = await prisma.post.findMany({
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true
+          }
+        },
+        comments: {
+          select: {
+            id: true
+          }
+        },
+        ratings: {
+          select: {
+            rating: true
+          }
+        }
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
+    
+    // calculate the comment count for each post
+    const postsWithCounts = posts.map(post => {
+      return {
+        ...post,
+        commentCount: post.comments.length,
+        comments: undefined // remove the comment details, only keep the count
+      };
+    });
+    
+    res.json(postsWithCounts);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "获取帖子列表失败" });
+  }
+});
+
+// get post details
+app.get("/posts/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const post = await prisma.post.findUnique({
+      where: {
+        id: parseInt(id)
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true
+          }
+        },
+        comments: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true
+              }
+            }
+          },
+          orderBy: {
+            createdAt: 'desc'
+          }
+        },
+        ratings: {
+          select: {
+            rating: true,
+            userId: true
+          }
+        }
+      }
+    });
+    
+    if (!post) {
+      return res.status(404).json({ error: "post not found" });
+    }
+    
+    // 计算平均评分
+    let averageRating = 0;
+    if (post.ratings.length > 0) {
+      const sum = post.ratings.reduce((acc, curr) => acc + curr.rating, 0);
+      averageRating = sum / post.ratings.length;
+    }
+    
+    const postWithRating = {
+      ...post,
+      averageRating,
+      ratingCount: post.ratings.length
+    };
+    
+    res.json(postWithRating);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "failed to get post details" });
+  }
+});
+
 // Create a Comment
 app.post("/comments", async (req, res) => {
   try {
