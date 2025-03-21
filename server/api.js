@@ -185,7 +185,7 @@ app.get("/posts/:id", async (req, res) => {
       return res.status(404).json({ error: "post not found" });
     }
     
-    // 计算平均评分
+    // calculate the average rating
     let averageRating = 0;
     if (post.ratings.length > 0) {
       const sum = post.ratings.reduce((acc, curr) => acc + curr.rating, 0);
