@@ -1,13 +1,23 @@
-# Frontend
-## Getting Started with Create React App
+# CS5500-Group8-Tourism-Web-App
+## Run the project
+### Start the react app
+Open a Terminal in the root directory and run:```npm start```
 
+### Start the backend server
+Open a new Terminal in the root directory and run:```npx nodemon server/api.js```
+
+### Start the prisma studio
+Open a new Terminal in the root directory and run:```npx prisma studio --schema=server/prisma/schema.prisma```
+
+## Frontend
+### Getting Started with Create React App
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+### Available Scripts
 
 In the project directory, you can run:
 
-### `npm start`
+#### `npm start`
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
@@ -47,13 +57,8 @@ You can learn more in the [Create React App documentation](https://facebook.gith
 To learn React, check out the [React documentation](https://reactjs.org/).
 
 # Backend
-## API
 This web-based platform enables admins to manage tourism spot posts (create, read, update, delete) and allows users to star their favorite spots. It aims to ensure a seamless user experience, maintain data integrity, and support scalability. 
 
-## Command to run the server
-```npx nodemon server/api.js```
 
-## Command to run the prisma studio
-```npx prisma studio --schema=server/prisma/schema.prisma```
 
 
