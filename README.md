@@ -50,17 +50,10 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 ## API
 This web-based platform enables admins to manage tourism spot posts (create, read, update, delete) and allows users to star their favorite spots. It aims to ensure a seamless user experience, maintain data integrity, and support scalability. 
 
-# Command to run the server
+## Command to run the server
 ```npx nodemon server/api.js```
 
-# Command to run the prisma studio
+## Command to run the prisma studio
 ```npx prisma studio --schema=server/prisma/schema.prisma```
 
-
-
-# Command to run the server
-```npx nodemon server/api.js```
-
-# Command to run the prisma studio
-```npx prisma studio --schema=server/prisma/schema.prisma```
 
