@@ -1,0 +1,56 @@
+name: API Tests
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    services:
+      # setup mysql test database
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: testdb
+          MYSQL_USER: user
+          MYSQL_PASSWORD: password
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: Install dependencies
+        run: |
+          cd backend
+          npm install
+          
+      - name: Setup Prisma and database
+        run: |
+          cd backend
+          npx prisma generate
+          npx prisma db push
+        env:
+          DATABASE_URL: mysql://user:password@localhost:3306/testdb
+          
+      - name: Run API tests
+        run: |
+          cd backend
+          npm test
+        env:
+          DATABASE_URL: mysql://user:password@localhost:3306/testdb 
