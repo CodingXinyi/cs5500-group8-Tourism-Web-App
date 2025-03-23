@@ -2,14 +2,14 @@
 ## Run the project
 ### Start the react app
 #### Frontend
-[README](https://github.com/CodingXinyi/cs5500-group8-Tourism-Web-App/blob/main/backend/README.md) <br>
+[README](https://github.com/CodingXinyi/cs5500-group8-Tourism-Web-App/blob/main/frontend/README.md)  <br>
 #### Open a Terminal 
 ```cd frontend```
 ```npm start```
 
 ### Start the backend server
 #### Backend 
-[README](https://github.com/CodingXinyi/cs5500-group8-Tourism-Web-App/blob/main/frontend/README.md) <br>
+[README](https://github.com/CodingXinyi/cs5500-group8-Tourism-Web-App/blob/main/backend/README.md)<br>
 #### Open a new Terminal 
 ```cd backend```
 ```npx nodemon server/api.js```
