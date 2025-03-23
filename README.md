@@ -1,7 +1,9 @@
 # CS5500-Group8-Tourism-Web-App
 ## Run the project
 ### Start the react app
-Open a Terminal 
+#### Frontend
+[README](https://github.com/CodingXinyi/cs5500-group8-Tourism-Web-App/blob/hotfix/combine_backend_and_frontend/frontend/README.md) <br>
+#### Open a Terminal 
 ```cd frontend```
 ```npm start```
 
@@ -13,8 +15,6 @@ Open a Terminal
 ```npx nodemon server/api.js```
 
 ### Start the prisma studio
-#### Frontend
-[README](https://github.com/CodingXinyi/cs5500-group8-Tourism-Web-App/blob/hotfix/combine_backend_and_frontend/frontend/README.md) <br>
 #### Open a new Terminal
 ```cd backend```
 ```npx prisma studio --schema=server/prisma/schema.prisma```
