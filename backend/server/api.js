@@ -225,6 +225,23 @@ app.get("/posts/:id", async (req, res) => {
   }
 });
 
+// delete post
+app.delete("/posts/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await prisma.post.delete({
+      where: {
+        id: parseInt(id)
+      }
+    });
+    res.json({ message: "帖子删除成功" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "删除帖子失败" });
+  }
+});
+
+/** Comment **/
 // Create a Comment
 app.post("/comments", async (req, res) => {
   try {
@@ -323,10 +340,15 @@ app.put("/comments/:id", async (req, res) => {
   }
 });
 
+// conditionally start the server
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(8000, () => {
+    console.log("Server running on http://localhost:8000 🎉 🚀");
+  });
+}
 
-app.listen(8000, () => {
-  console.log("Server running on http://localhost:8000 🎉 🚀");
-});
+// export app object for testing
+export default app;
 
 // Prisma Commands
 // npx prisma db push: to push the schema to the database or any changes to the schema
