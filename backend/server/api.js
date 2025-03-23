@@ -23,7 +23,6 @@ app.post("/user", async (req, res) => {
       data: {
         email : email,
         name : name, 
-        // preferredName : preferredName
       },
     });
     res.json(tweet);
