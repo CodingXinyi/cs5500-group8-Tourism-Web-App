@@ -32,6 +32,27 @@ app.post("/user", async (req, res) => {
   }
 });
 
+// get user information
+app.get("/user/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await prisma.user.findUnique({
+      where: {
+        id: parseInt(id)
+      }
+    });
+    
+    if (!user) {
+      return res.status(404).json({ error: "user not found" });
+    }
+    
+    res.json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "failed to get user information" });
+  }
+});
+
 // Create a Post
 app.post("/posts", async (req, res) => {
   try {
@@ -62,7 +83,7 @@ app.post("/posts", async (req, res) => {
     res.json(newPost);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "创建帖子失败" });
+    res.status(500).json({ error: "failed to create post" });
   }
 });
 
@@ -137,7 +158,7 @@ app.get("/posts", async (req, res) => {
     res.json(postsWithCounts);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "获取帖子列表失败" });
+    res.status(500).json({ error: "failed to get post list" });
   }
 });
 
