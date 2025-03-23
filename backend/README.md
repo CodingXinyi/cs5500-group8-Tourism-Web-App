@@ -7,7 +7,7 @@ This web-based platform enables admins to manage tourism spot posts (create, rea
 
 # Add the following to the .env file
 ```
-DATABASE_URL="postgresql://<user>:<password>@localhost:3306/postsdb"
+DATABASE_URL="mysql://<user>:<password>@localhost:3306/postsdb"
 ```
 # Prisma generate
 ```cd backend```
