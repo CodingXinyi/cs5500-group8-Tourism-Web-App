@@ -51,6 +51,6 @@ jobs:
       - name: Run API tests
         run: |
           cd backend
-          npm test
+          npx vitest
         env:
           DATABASE_URL: mysql://user:password@localhost:3306/testdb 
