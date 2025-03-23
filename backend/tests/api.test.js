@@ -2,8 +2,7 @@ import request from 'supertest';
 import { PrismaClient } from '@prisma/client';
 import { beforeAll, afterAll, beforeEach, describe, it, expect } from 'vitest';
 import app from '../server/api.js';
-import dotenv from 'dotenv';
-dotenv.config();
+
 
 const prisma = new PrismaClient();
 
@@ -71,7 +70,7 @@ describe('API Tests', () => {
       userId = response.body.id;
     });
     
-    // 可以添加获取用户信息的测试
+    // you can add a test to get user information
     it('should get user information', async () => {
       const response = await request(app)
         .get(`/user/${userId}`)
@@ -146,5 +145,4 @@ describe('API Tests', () => {
     });
   }, 60000);
   
-  // 移除评论API测试部分，因为您只想测试用户和帖子功能
 }); 
