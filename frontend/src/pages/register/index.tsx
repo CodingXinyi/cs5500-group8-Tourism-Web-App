@@ -11,7 +11,7 @@ const Register = () => {
     password: "",
     name: "",
   });
-  const [err, setErr] = useState(null);
+  const [err, setErr] = useState<string | null>(null);
 
   const handleChange = (e: any) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -21,9 +21,15 @@ const Register = () => {
     e.preventDefault();
 
     try {
-      await axios.post("http://localhost:4000/api/auth/register", inputs);
+      const response = await axios.post("http://localhost:8000/user", inputs);
+      console.log("registration successful:", response.data);
+      window.location.href = "/login";
     } catch (err: any) {
-      setErr(err.response.data);
+      if (err.response) {
+        setErr(err.response.data.error);
+      } else {
+        setErr("Registration failed, please try again later");
+      }
     }
   };
 
@@ -42,24 +48,28 @@ const Register = () => {
                 placeholder="Username"
                 name="username"
                 onChange={handleChange}
+                required
               />
               <input
                 type="email"
                 placeholder="Email"
                 name="email"
                 onChange={handleChange}
+                required
               />
               <input
                 type="password"
                 placeholder="Password"
                 name="password"
                 onChange={handleChange}
+                required
               />
               <input
                 type="text"
                 placeholder="Name"
                 name="name"
                 onChange={handleChange}
+                required
               />
 
               {err && <div style={{ color: "red" }}>{err}</div>}
