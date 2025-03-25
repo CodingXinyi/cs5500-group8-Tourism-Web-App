@@ -74,4 +74,32 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// Login route
+router.post("/login", async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    
+    // find user
+    const user = await prisma.user.findUnique({
+      where: { username }
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: "user does not exist" });
+    }
+
+    // verify password
+    if (user.password !== password) { // note: should use encryption to compare in actual use
+      return res.status(400).json({ error: "password is incorrect" });
+    }
+
+    // exclude password when returning user information
+    const { password: _, ...userWithoutPassword } = user;
+    res.json(userWithoutPassword);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "login failed" });  
+  }
+});
+
 export default router;
