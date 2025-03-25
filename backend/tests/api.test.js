@@ -125,6 +125,50 @@ describe('API Tests', () => {
 
       expect(response.body.error).toBe('user not found');
     });
+
+    it('should login successfully with correct credentials', async () => {
+      const loginData = {
+        username: testUser.username,
+        password: testUser.password
+      };
+
+      const response = await request(app)
+        .post('/user/login')
+        .send(loginData)
+        .expect(200);
+
+      expect(response.body.username).toBe(testUser.username);
+      expect(response.body.email).toBe(testUser.email);
+      expect(response.body).not.toHaveProperty('password');
+    });
+
+    it('should fail login with incorrect password', async () => {
+      const loginData = {
+        username: testUser.username,
+        password: 'wrongpassword'
+      };
+
+      const response = await request(app)
+        .post('/user/login')
+        .send(loginData)
+        .expect(400);
+
+      expect(response.body.error).toBe('password is incorrect');
+    });
+
+    it('should fail login with non-existent username', async () => {
+      const loginData = {
+        username: 'nonexistentuser',
+        password: 'somepassword'
+      };
+
+      const response = await request(app)
+        .post('/user/login')
+        .send(loginData)
+        .expect(404);
+
+      expect(response.body.error).toBe('user does not exist');
+    });
   });
   
   // post API tests
