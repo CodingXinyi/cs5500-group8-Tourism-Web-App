@@ -7,27 +7,59 @@ const prisma = new PrismaClient();
 // Create a user
 router.post("/", async (req, res) => {
   try {
-    const { email, name } = req.body;
+    const { email, name, username, password } = req.body;
+    
+    // check if username already exists
+    const existingUsername = await prisma.user.findUnique({
+      where: { username }
+    });
+    if (existingUsername) {
+      return res.status(400).json({ error: "username already exists" });
+    }
+
+    // check if email already exists
+    const existingEmail = await prisma.user.findUnique({
+      where: { email }
+    });
+    if (existingEmail) {
+      return res.status(400).json({ error: "email already exists" });
+    }
+
     const user = await prisma.user.create({
       data: {
-        email: email,
-        name: name, 
+        email,
+        name,
+        username,
+        password, // note: should encrypt password in actual use
       },
     });
-    res.json(user);
+    
+    // exclude password when returning user information
+    const { password: _, ...userWithoutPassword } = user;
+    res.json(userWithoutPassword);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "failed to create user" });
   }
 });
 
-// 获取用户信息
+// get user information
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const user = await prisma.user.findUnique({
       where: {
         id: parseInt(id)
+      },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        username: true,
+        posts: true,
+        ratings: true,
+        comments: true,
+        // do not return password field
       }
     });
     
