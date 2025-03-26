@@ -9,7 +9,7 @@ const Signin = () => {
     username: "",
     password: "",
   });
-  const [err, setErr] = useState(null);
+  const [err, setErr] = useState<string | null>(null);
 
   const navigate = useNavigate();
 
@@ -22,9 +22,13 @@ const Signin = () => {
     e.preventDefault();
     try {
       await login(inputs);
-      navigate("/blog/home");
+      navigate("/home");
     } catch (err: any) {
-      setErr(err.response.data);
+      if (err.response) {
+        setErr(err.response.data.error);
+      } else {
+        setErr("login failed, please try again later");
+      }
     }
   };
 
@@ -55,14 +59,16 @@ const Signin = () => {
                 placeholder="Username"
                 name="username"
                 onChange={handleChange}
+                required
               />
               <input
                 type="password"
                 placeholder="Password"
                 name="password"
                 onChange={handleChange}
+                required
               />
-              {err && err}
+              {err && <div style={{ color: "red" }}>{err}</div>}
               <button onClick={handleLogin}>Log in</button>
             </form>
           </div>

@@ -9,7 +9,9 @@ const prisma = new PrismaClient();
 // test user data
 const testUser = {
   email: 'test@example.com',
-  name: 'Test User'
+  name: 'Test User',
+  username: 'testuser',
+  password: 'testpassword123'
 };
 
 // test post data
@@ -66,11 +68,40 @@ describe('API Tests', () => {
       expect(response.body).toHaveProperty('id');
       expect(response.body.email).toBe(testUser.email);
       expect(response.body.name).toBe(testUser.name);
+      expect(response.body.username).toBe(testUser.username);
+      expect(response.body).not.toHaveProperty('password');
       
       userId = response.body.id;
     });
     
-    // you can add a test to get user information
+    it('should not create user with duplicate username', async () => {
+      const duplicateUser = {
+        ...testUser,
+        email: 'another@example.com'
+      };
+
+      const response = await request(app)
+        .post('/user')
+        .send(duplicateUser)
+        .expect(400);
+
+      expect(response.body.error).toBe('username already exists');
+    });
+    
+    it('should not create user with duplicate email', async () => {
+      const duplicateUser = {
+        ...testUser,
+        username: 'anotheruser'
+      };
+
+      const response = await request(app)
+        .post('/user')
+        .send(duplicateUser)
+        .expect(400);
+
+      expect(response.body.error).toBe('email already exists');
+    });
+    
     it('should get user information', async () => {
       const response = await request(app)
         .get(`/user/${userId}`)
@@ -78,6 +109,65 @@ describe('API Tests', () => {
       
       expect(response.body.id).toBe(userId);
       expect(response.body.email).toBe(testUser.email);
+      expect(response.body.username).toBe(testUser.username);
+      expect(response.body.name).toBe(testUser.name);
+      expect(response.body).not.toHaveProperty('password');
+      expect(response.body).toHaveProperty('posts');
+      expect(response.body).toHaveProperty('ratings');
+      expect(response.body).toHaveProperty('comments');
+    });
+
+    it('should return 404 for non-existent user', async () => {
+      const nonExistentId = 99999;
+      const response = await request(app)
+        .get(`/user/${nonExistentId}`)
+        .expect(404);
+
+      expect(response.body.error).toBe('user not found');
+    });
+
+    it('should login successfully with correct credentials', async () => {
+      const loginData = {
+        username: testUser.username,
+        password: testUser.password
+      };
+
+      const response = await request(app)
+        .post('/user/login')
+        .send(loginData)
+        .expect(200);
+
+      expect(response.body.username).toBe(testUser.username);
+      expect(response.body.email).toBe(testUser.email);
+      expect(response.body).not.toHaveProperty('password');
+    });
+
+    it('should fail login with incorrect password', async () => {
+      const loginData = {
+        username: testUser.username,
+        password: 'wrongpassword'
+      };
+
+      const response = await request(app)
+        .post('/user/login')
+        .send(loginData)
+        .expect(400);
+
+      expect(response.body.error).toBe('password is incorrect');
+    });
+
+    it('should fail login with non-existent username', async () => {
+      const loginData = {
+        username: 'nonexistentuser',
+        password: 'somepassword'
+      };
+
+      const response = await request(app)
+        .post('/user/login')
+        .send(loginData)
+        .expect(404);
+
+      expect(response.body.error).toBe('user does not exist');
     });
   });
   

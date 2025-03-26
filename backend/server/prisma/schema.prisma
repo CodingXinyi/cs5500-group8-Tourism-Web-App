@@ -30,6 +30,8 @@ model Post {
 model User {
   id            Int           @id @default(autoincrement())
   email         String        @unique
+  username      String        @unique
+  password      String        
   name          String?
   posts         Post[]
   ratings       PostRating[]
