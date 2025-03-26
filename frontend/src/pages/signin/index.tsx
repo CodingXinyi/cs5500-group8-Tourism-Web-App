@@ -22,7 +22,7 @@ const Signin = () => {
     e.preventDefault();
     try {
       await login(inputs);
-      navigate("/blog/home");
+      navigate("/home");
     } catch (err: any) {
       if (err.response) {
         setErr(err.response.data.error);
