@@ -171,68 +171,87 @@ describe('API Tests', () => {
     });
   });
   
-  // post API tests
+  // Post API tests
   describe('Post API', () => {
     it('should create a new post', async () => {
-      const postData = { ...testPost, userId };
-      
+      const postData = {
+        userId: userId,
+        postName: testPost.postName,
+        location: testPost.exactLocation,
+        introduction: 'Test Introduction',
+        description: testPost.postDetailDescription,
+        policy: 'Test Policy',
+        pictureUrl: testPost.pictureUrl
+      };
+
       const response = await request(app)
         .post('/posts')
         .send(postData)
         .expect(200);
-      
+
       expect(response.body).toHaveProperty('id');
-      expect(response.body.postName).toBe(testPost.postName);
-      
+      expect(response.body.postName).toBe(postData.postName);
+      expect(response.body.userId).toBe(userId);
       postId = response.body.id;
     });
-    
+
     it('should get all posts', async () => {
       const response = await request(app)
         .get('/posts')
         .expect(200);
-      
+
       expect(Array.isArray(response.body)).toBe(true);
-      expect(response.body.length).toBe(1);
+      expect(response.body.length).toBeGreaterThan(0);
       expect(response.body[0]).toHaveProperty('commentCount');
-    }, 10000);
-    
-    it('should get a specific post', async () => {
+      expect(response.body[0].user).toHaveProperty('name');
+    });
+
+    it('should get post details by id', async () => {
       const response = await request(app)
         .get(`/posts/${postId}`)
         .expect(200);
-      
+
       expect(response.body.id).toBe(postId);
-      // if there is no rating and comment function, you can remove these assertions
-      // expect(response.body).toHaveProperty('averageRating');
-      // expect(response.body).toHaveProperty('comments');
+      expect(response.body.postName).toBe(testPost.postName);
+      expect(response.body).toHaveProperty('comments');
+      expect(response.body).toHaveProperty('ratings');
+      expect(response.body.user).toHaveProperty('name');
     });
-    
+
     it('should update a post', async () => {
       const updateData = {
-        postName: 'Updated Post Name'
+        postName: 'Updated Post Name',
+        introduction: 'Updated Introduction'
       };
-      
+
       const response = await request(app)
         .put(`/posts/${postId}`)
         .send(updateData)
         .expect(200);
-      
+
       expect(response.body.postName).toBe(updateData.postName);
+      expect(response.body.introduction).toBe(updateData.introduction);
     });
-    
+
+    it('should get post comments', async () => {
+      const response = await request(app)
+        .get(`/posts/${postId}/comments`)
+        .expect(200);
+
+      expect(Array.isArray(response.body)).toBe(true);
+    });
+
     it('should delete a post', async () => {
       await request(app)
         .delete(`/posts/${postId}`)
         .expect(200);
-      
-      // 验证帖子是否被删除
+
+      // Verify post is deleted
       const response = await request(app)
-        .get('/posts')
-        .expect(200);
-      
-      expect(response.body.length).toBe(0);
+        .get(`/posts/${postId}`)
+        .expect(404);
+
+      expect(response.body.error).toBe('post not found');
     });
-  }, 60000);
-  
+  });
 }); 

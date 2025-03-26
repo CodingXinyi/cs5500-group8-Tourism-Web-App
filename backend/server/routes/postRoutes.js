@@ -10,21 +10,21 @@ router.post("/", async (req, res) => {
     const { 
       userId, 
       postName, 
-      locationState, 
-      locationCity, 
-      exactLocation, 
-      postDetailDescription, 
+      location,
+      introduction,
+      description,
+      policy,
       pictureUrl 
     } = req.body;
     
     const newPost = await prisma.post.create({
       data: {
-        userId,
+        userId: parseInt(userId),
         postName,
-        locationState,
-        locationCity,
-        exactLocation,
-        postDetailDescription,
+        location,
+        introduction,
+        description,
+        policy,
         pictureUrl
       },
       include: {
@@ -43,8 +43,6 @@ router.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const updateData = req.body;
-    
-    updateData.updatedAt = new Date();
     
     const updatedPost = await prisma.post.update({
       where: {
@@ -115,65 +113,52 @@ try {
 
 // get post details
 router.get("/:id", async (req, res) => {
-try {
+  try {
     const { id } = req.params;
     const post = await prisma.post.findUnique({
-    where: {
+      where: {
         id: parseInt(id)
-    },
-    include: {
+      },
+      include: {
         user: {
-        select: {
+          select: {
             id: true,
             name: true,
             email: true
-        }
+          }
         },
         comments: {
-        include: {
+          include: {
             user: {
-            select: {
+              select: {
                 id: true,
                 name: true,
                 email: true
+              }
             }
-            }
-        },
-        orderBy: {
+          },
+          orderBy: {
             createdAt: 'desc'
-        }
+          }
         },
         ratings: {
-        select: {
+          select: {
             rating: true,
             userId: true
+          }
         }
-        }
-    }
+      }
     });
     
     if (!post) {
-    return res.status(404).json({ error: "post not found" });
+      return res.status(404).json({ error: "post not found" });
     }
     
-    // calculate the average rating
-    let averageRating = 0;
-    if (post.ratings.length > 0) {
-    const sum = post.ratings.reduce((acc, curr) => acc + curr.rating, 0);
-    averageRating = sum / post.ratings.length;
-    }
-    
-    const postWithRating = {
-    ...post,
-    averageRating,
-    ratingCount: post.ratings.length
-    };
-    
-    res.json(postWithRating);
-} catch (error) {
+    res.json(post);
+  } catch (error) {
     console.error(error);
     res.status(500).json({ error: "failed to get post details" });
-}
+  }
 });
 
 // Get all comments for a specific post
@@ -206,18 +191,18 @@ router.get("/:postId/comments", async (req, res) => {
 
 // delete post
 router.delete("/:id", async (req, res) => {
-try {
+  try {
     const { id } = req.params;
     await prisma.post.delete({
-    where: {
+      where: {
         id: parseInt(id)
-    }
+      }
     });
-    res.json({ message: "帖子删除成功" });
-} catch (error) {
+    res.json({ message: "post deleted successfully" });
+  } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "删除帖子失败" });
-}
+    res.status(500).json({ error: "failed to delete post" });
+  }
 });
 
 // export the router
