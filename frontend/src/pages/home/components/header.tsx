@@ -1,15 +1,23 @@
-import React from "react";
+import React, { useContext } from "react";
 import "../index.css";
 import { Link, useNavigate } from "react-router";
+import { AuthContext } from "../../../context/authContext";
 
 export default function Header() {
   const navigate = useNavigate();
+  const { currentUser, logout } = useContext(AuthContext);
+  
   const toSignin = () => {
     navigate("/login");
   };
   const toRegister = () => {
     navigate("/register");
   };
+  const handleLogout = () => {
+    logout();
+    navigate("/home");
+  };
+
   return (
     <div className="headerContainer row " style={{ marginBottom: "1rem" }}>
       <Link
@@ -50,31 +58,53 @@ export default function Header() {
         </li>
       </ul>
       <div className="col-sm-12 col-md-3 col-lg-3  d-flex justify-content-center my-1 ">
-        <button
-          type="button"
-          className="btn btn-dark rounded-4 btn-sm"
-          onClick={toSignin}
-          style={{
-            paddingLeft: "1rem",
-            paddingRight: "1rem",
-            fontSize: "10px",
-          }}
-        >
-          Log in
-        </button>
-        <button
-          type="button"
-          className="btn btn-dark rounded-4 btn-sm"
-          onClick={toRegister}
-          style={{
-            paddingLeft: "1rem",
-            paddingRight: "1rem",
-            fontSize: "10px",
-            marginLeft: "1rem",
-          }}
-        >
-          Register
-        </button>
+        {currentUser ? (
+          <div className="d-flex align-items-center">
+            <span className="me-2" style={{ fontSize: "14px" }}>
+              {currentUser.username}
+            </span>
+            <button
+              type="button"
+              className="btn btn-dark rounded-4 btn-sm"
+              onClick={handleLogout}
+              style={{
+                paddingLeft: "1rem",
+                paddingRight: "1rem",
+                fontSize: "10px",
+              }}
+            >
+              Logout
+            </button>
+          </div>
+        ) : (
+          <>
+            <button
+              type="button"
+              className="btn btn-dark rounded-4 btn-sm"
+              onClick={toSignin}
+              style={{
+                paddingLeft: "1rem",
+                paddingRight: "1rem",
+                fontSize: "10px",
+              }}
+            >
+              Log in
+            </button>
+            <button
+              type="button"
+              className="btn btn-dark rounded-4 btn-sm"
+              onClick={toRegister}
+              style={{
+                paddingLeft: "1rem",
+                paddingRight: "1rem",
+                fontSize: "10px",
+                marginLeft: "1rem",
+              }}
+            >
+              Register
+            </button>
+          </>
+        )}
       </div>
     </div>
   );

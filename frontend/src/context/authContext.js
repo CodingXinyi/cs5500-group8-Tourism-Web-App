@@ -18,13 +18,16 @@ export const AuthContextProvider = ({ children }) => {
       throw error;  // 将错误传递给调用者
     }
   };
+  const logout = () => {
+    setCurrentUser(null);
+  };
   useEffect(() => {
     localStorage.setItem("user", JSON.stringify(currentUser));
   }, [currentUser]);
 
   return (
     //返回标签时要提供全局的数据
-    <AuthContext.Provider value={{ currentUser, login }}>
+    <AuthContext.Provider value={{ currentUser, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
