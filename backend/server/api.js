@@ -7,6 +7,7 @@ import cors from "cors";
 import userRoutes from "./routes/userRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
 import commentRoutes from "./routes/commentRoutes.js";
+import ratingRoutes from "./routes/ratingRoutes.js";
 
 const app = express();
 
@@ -22,6 +23,7 @@ const prisma = new PrismaClient();
 app.use("/user", userRoutes);
 app.use("/posts", postRoutes);
 app.use("/comments", commentRoutes);
+app.use("/rating", ratingRoutes);
 /** Comment **/
 
 

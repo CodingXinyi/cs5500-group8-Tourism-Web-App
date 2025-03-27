@@ -32,7 +32,6 @@ model User {
   email         String        @unique
   username      String        @unique
   password      String        
-  name          String?
   posts         Post[]
   ratings       PostRating[]
   comments      PostComment[]
