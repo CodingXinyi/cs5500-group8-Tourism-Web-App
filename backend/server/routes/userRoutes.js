@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 // Create a user
 router.post("/", async (req, res) => {
   try {
-    const { email, username, password } = req.body;
+    const { email, name, username, password } = req.body;
     
     // check if username already exists
     const existingUsername = await prisma.user.findUnique({
@@ -28,6 +28,7 @@ router.post("/", async (req, res) => {
     const user = await prisma.user.create({
       data: {
         email,
+        name,
         username,
         password, // note: should encrypt password in actual use
       },
