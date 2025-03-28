@@ -1,156 +1,170 @@
-import React, { useState } from "react"; // ✅ 1. 添加 useState，用于分页管理
-import "./index.css";
-import Header from "../home/components/header";
-import { IoLocationOutline } from "react-icons/io5";
-import { Link, useNavigate } from "react-router";
-import * as db from "../database";
+import React, { useEffect, useState } from 'react';
+import './index.css';
+import Header from '../home/components/header';
+import { Link, useNavigate } from 'react-router-dom';
+import ModalForm from '../../components/inputPost';
+import EditModalForm from '../../components/editModal';
+import { deletePosts, getPost } from '../../client/posts';
+
+interface Post {
+  id: string;
+  postName: string;
+  location: string;
+  introduction: string;
+  description: string;
+  policy: string;
+  pictureUrl: string;
+}
 
 export default function Tour() {
-  const destinations = db.Desinations;
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 20;
   const navigate = useNavigate();
-  // 分页
-  const [currentPage, setCurrentPage] = useState(1); // 当前页
-  const itemsPerPage = 20; // 每页显示20条数据
+  const [showModal, setShowModal] = useState(false);
 
-  const totalPages = Math.ceil(destinations.length / itemsPerPage); // 总页数
-  const startIndex = (currentPage - 1) * itemsPerPage; // 当前页起始索引
-  const paginatedDestinations = destinations.slice(
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
+
+  const deletePost = async (postId: any) => {
+    try {
+      await deletePosts(postId);
+      setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
+      console.log('Post deleted successfully');
+    } catch (error) {
+      console.error('Failed to delete post:', error);
+    }
+  };
+
+  const fetchPosts = async () => {
+    try {
+      const posts = await getPost();
+      console.log('Fetched posts:', posts);
+      setPosts(posts);
+    } catch (error) {
+      console.error('Failed to fetch posts:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  const totalPages = Math.ceil(posts.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedDestinations = posts.slice(
     startIndex,
     startIndex + itemsPerPage
-  ); // 当前页数据
+  );
 
-  const toDestinationPage = (destinationName: any) => {
-    navigate(`/tour/${destinationName}`);
+  const toDestinationPage = (id: string) => {
+    navigate(`/tour/${id}`);
   };
+
+  const handleShowModal = () => setShowModal(true);
+  const handleCloseModal = () => setShowModal(false);
+
+  //const [targetId, setTargetID] = useState<string>('');
+
   return (
     <div>
       <Header />
       <div id="tourContainer">
-        <div
-          style={{
-            color: "rgb(249, 151, 104)",
-            fontSize: "1.5rem",
-            textWrap: "nowrap",
-          }}
-        >
+        <div style={{ color: 'rgb(249, 151, 104)', fontSize: '1.5rem' }}>
           Explore Iconic Locations!
-          <img src="pictures/travelIcon.jpg" alt="icon" width={"70px"} />
+          <img src="pictures/travelIcon.jpg" alt="icon" width={'70px'} />
         </div>
         <p
           style={{
-            paddingLeft: "10vw",
-            paddingRight: "10vw",
-            color: "gray",
-            textAlign: "center",
+            paddingLeft: '10vw',
+            paddingRight: '10vw',
+            textAlign: 'center',
+            color: 'gray',
           }}
         >
-          Embark on a journey to explore the world’s most breathtaking
-          landscapes and iconic landmarks. From majestic mountains to serene
-          beaches, uncover hidden gems and unforgettable adventures. Your next
-          destination awaits!
+          Embark on a journey to explore the world's most breathtaking
+          landscapes and iconic landmarks.
         </p>
-        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-4" id="cards">
-          {paginatedDestinations.map(
-            (
-              d // 替换 destinations 为 paginatedDestinations
-            ) => (
-              <div
-                key={d.title} // 添加 key，确保每个卡片唯一
-                className="cardShadow border p-2 mb-4 rounded-4 m-3"
-                style={{ transition: "box-shadow 0.5s ease", width: "300px" }}
-              >
-                <Link to={`/tour/${d.title}`}>
-                  <img
-                    src={d.image[0]}
-                    className="card-img-top"
-                    style={{
-                      objectFit: "cover",
-                      height: "200px",
-                      width: "100%",
-                      borderRadius: "10px",
-                      marginBottom: "15px",
-                    }}
-                    alt={d.title}
-                  />
-                </Link>
+        <button
+          className="btn btn-primary bg-orange-300"
+          onClick={handleShowModal}
+        >
+          Share your Destinations!
+        </button>
+        <ModalForm show={showModal} onHide={handleCloseModal} />
+
+        <div
+          className="row row-cols-1 row-cols-sm-2 row-cols-md-4"
+          id="cards"
+          style={{ marginLeft: '100px' }}
+        >
+          {paginatedDestinations.map((d) => (
+            <div
+              key={d.id}
+              className="cardShadow border p-2 mb-4 rounded-4 m-3"
+              style={{ width: '350px' }}
+            >
+              <Link to={`/tour/${d.id}`}>
+                <img
+                  src={d.pictureUrl}
+                  className="card-img-top"
+                  style={{ height: '200px', objectFit: 'cover' }}
+                  alt={d.postName}
+                />
+              </Link>
+              <div className="card-body">
+                <h6>
+                  <b>{d.postName}</b>
+                </h6>
+                <p className="text-muted">{d.location}</p>
                 <div
-                  className="card-body"
-                  style={{ display: "flex", justifyContent: "space-between" }}
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}
                 >
-                  <div>
-                    <h6 className="card-title">
-                      <b>&nbsp;{d.title}</b>
-                    </h6>
-                    <p
-                      className="card-text"
-                      style={{
-                        fontSize: "14px",
-                        color: "gray",
-                        marginTop: "5px",
-                      }}
-                    >
-                      <IoLocationOutline
-                        style={{
-                          color: "rgb(229, 151, 104)",
-                          fontSize: "16px",
-                          fontWeight: "700",
-                        }}
-                      />
-                      {d.location}
-                    </p>
-                  </div>
                   <button
-                    className="btn btn-outline-warning btn-sm rounded-4"
-                    onClick={() => toDestinationPage(d.title)}
+                    className="btn btn-warning btn-sm"
+                    onClick={() => {
+                      toDestinationPage(d.id);
+                    }}
                   >
-                    <b>Go Now!</b>
+                    Go Now!
+                  </button>
+                  <button
+                    className="btn btn-success btn-sm"
+                    onClick={() => {
+                      setSelectedPost(d);
+                      setShowEditModal(true); 
+                    }}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="btn btn-danger btn-sm"
+                    onClick={() => deletePost(d.id)}
+                  >
+                    Delete
                   </button>
                 </div>
               </div>
-            )
-          )}
+            </div>
+          ))}
         </div>
-        {/* 分页按钮 */}
-        <div style={{ textAlign: "center", marginTop: "20px" }}>
-          {Array.from(
-            { length: totalPages },
-            (
-              _,
-              i // 根据总页数生成按钮
-            ) => (
-              <button
-                key={i}
-                className={`btn btn-sm ${
-                  currentPage === i + 1 ? "btn-warning" : "btn-outline-warning" // 高亮当前页按钮
-                }`}
-                style={{ margin: "0 5px" }}
-                onClick={() => setCurrentPage(i + 1)} // 切换页码
-              >
-                {i + 1}
-              </button>
-            )
-          )}
+        <div style={{ textAlign: 'center', marginTop: '20px' }}>
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button key={i} onClick={() => setCurrentPage(i + 1)}>
+              {i + 1}
+            </button>
+          ))}
         </div>
+        <EditModalForm
+          show={showEditModal}
+          onHide={() => setShowEditModal(false)}
+          post={selectedPost}
+        />
       </div>
-      {/* ----------------------footer --------------------------- */}
-      <div id="footer">
-        <div>
-          Email: group8@northeastern.edu <br />
-          Phone: +1 (408) 382-1234 <br />
-          1234 Happy Street, San Jose,CA, USA
-          <br />
-          <br />
-          © 2024 WanderSphere Lot.d. Designed by Group8. <br />
-        </div>
-        <h5>
-          Exploration&nbsp; &nbsp;&nbsp;Culture&nbsp;&nbsp;&nbsp; Adventure
-        </h5>
-      </div>
-
-      {/* <Routes>
-        <Route path="/" element={<Navigate to="/tour" />}></Route>
-        <Route path="/tour/:destinationName" element={<Destination />}></Route>
-      </Routes> */}
     </div>
   );
 }
