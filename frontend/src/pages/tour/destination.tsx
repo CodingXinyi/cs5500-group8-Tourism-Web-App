@@ -1,25 +1,50 @@
-import React from "react";
-import "./index.css";
-import Header from "../home/components/header";
-import { FaStar } from "react-icons/fa6";
-import { useParams } from "react-router";
-import * as db from "../database";
+import React, { useEffect, useState } from 'react';
+import './index.css';
+import Header from '../home/components/header';
+import { FaStar } from 'react-icons/fa6';
+import { useParams } from 'react-router';
+import { fetchPostDetails } from '../../client/posts';
 
 export default function Destination() {
-  const { destinationName } = useParams();
-  const destinations = db.Desinations;
-  const target = destinations.find((d: any) => {
-    return d.title === destinationName;
-  });
+  interface DestinationDetail {
+    pictureUrl: string;
+    averageRating: number;
+    postName: string;
+    location: string;
+    introduction: string;
+    policy: string;
+    description: string;
+  }
+
+  const { destinationId } = useParams();
+  const [details, setDetails] = useState<DestinationDetail | null>(null);
+
+  const fetchDetails = async () => {
+    try {
+      const response = await fetchPostDetails(destinationId);
+      console.log(response);
+      setDetails(response);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchDetails();
+  }, [destinationId]);
+
+  // Ensure using `imageUrl` for both background image and img source
+  const imageUrl = details?.pictureUrl;
+
   return (
     <div id="destinationContainer">
       <div
         id="background"
         style={{
-          backgroundImage: `url(${target?.image[0]})`,
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
-          width: "100vw",
+          backgroundImage: `url(${imageUrl})`, // Using `imageUrl` here
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: 'cover',
+          width: '100vw',
         }}
       >
         <Header />
@@ -27,37 +52,39 @@ export default function Destination() {
           <div>
             <FaStar
               style={{
-                color: "orange",
-                fontSize: "2rem",
-                marginBottom: "1rem",
+                color: 'orange',
+                fontSize: '2rem',
+                marginBottom: '1rem',
               }}
             />
             <span
               style={{
-                color: "white",
-                fontSize: "1.5rem",
+                color: 'orange',
+                fontSize: '1.5rem',
               }}
             >
-              &nbsp;{target?.star}
+              &nbsp;{details?.averageRating}
             </span>
           </div>
-          <h1>{target?.title}</h1>
-          <p>{target?.location}</p>
-          <p style={{ fontSize: "2vh" }}>{target?.introduction}</p>
-          <div style={{ fontSize: "2vh" }}>
-            <p>{target?.policy}</p>
-            <p>{target?.openHour}</p>
+          <h1 className="text-black">{details?.postName}</h1>
+          <p className="text-black">{details?.location}</p>
+          <p className="text-black" style={{ fontSize: '2vh' }}>
+            {details?.introduction}
+          </p>
+          <div className="text-black" style={{ fontSize: '2vh' }}>
+            <p className="text-black">{details?.policy}</p>
+            <p className="text-black">{details?.description}</p>
           </div>
           <img
-            src={`/${target?.image[1]}`}
+            src={imageUrl} // Using `imageUrl` here
             alt="pics"
-            width={"300px"}
-            height={"200px"}
+            width={'300px'}
+            height={'200px'}
             style={{
-              border: "solid 4px orange",
-              borderRadius: "20px",
-              objectFit: "cover",
-              marginBottom: "2vh",
+              border: 'solid 4px orange',
+              borderRadius: '20px',
+              objectFit: 'cover',
+              marginBottom: '2vh',
             }}
           />
         </div>
