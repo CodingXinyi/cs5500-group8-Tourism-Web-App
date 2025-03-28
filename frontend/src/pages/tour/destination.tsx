@@ -34,9 +34,7 @@ export default function Destination() {
   }, [destinationId]);
 
   // Ensure using `imageUrl` for both background image and img source
-  const imageUrl = details?.pictureUrl.startsWith('blob:')
-    ? details.pictureUrl
-    : `/${details?.pictureUrl}`;
+  const imageUrl = details?.pictureUrl;
 
   return (
     <div id="destinationContainer">
