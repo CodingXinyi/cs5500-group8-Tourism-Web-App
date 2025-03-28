@@ -4,7 +4,8 @@ import Header from '../home/components/header';
 import { IoLocationOutline } from 'react-icons/io5';
 import { Link, useNavigate } from 'react-router-dom';
 import ModalForm from '../../components/inputPost';
-import { getPost } from '../../client/posts';
+import EditModalForm from '../../components/editModal';
+import { deletePosts, getPost } from '../../client/posts';
 
 type Post = {
   id: string;
@@ -22,6 +23,19 @@ export default function Tour() {
   const itemsPerPage = 20;
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
+
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
+
+  const deletePost = async (postId: any) => {
+    try {
+      await deletePosts(postId);
+      setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
+      console.log('Post deleted successfully');
+    } catch (error) {
+      console.error('Failed to delete post:', error);
+    }
+  };
 
   const fetchPosts = async () => {
     try {
@@ -79,7 +93,12 @@ export default function Tour() {
           Share your Destinations!
         </button>
         <ModalForm show={showModal} onHide={handleCloseModal} />
-        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-4" id="cards">
+
+        <div
+          className="row row-cols-1 row-cols-sm-2 row-cols-md-4"
+          id="cards"
+          style={{ marginLeft: '100px' }}
+        >
           {paginatedDestinations.map((d) => (
             <div
               key={d.id}
@@ -99,14 +118,37 @@ export default function Tour() {
                   <b>{d.postName}</b>
                 </h6>
                 <p className="text-muted">{d.location}</p>
-                <button
-                  className="btn btn-warning btn-sm"
-                  onClick={() => {
-                    toDestinationPage(d.id);
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
                   }}
                 >
-                  Go Now!
-                </button>
+                  <button
+                    className="btn btn-warning btn-sm"
+                    onClick={() => {
+                      toDestinationPage(d.id);
+                    }}
+                  >
+                    Go Now!
+                  </button>
+                  <button
+                    className="btn btn-success btn-sm"
+                    onClick={() => {
+                      setSelectedPost(d);
+                      setShowEditModal(true); 
+                    }}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="btn btn-danger btn-sm"
+                    onClick={() => deletePost(d.id)}
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
             </div>
           ))}
@@ -118,6 +160,11 @@ export default function Tour() {
             </button>
           ))}
         </div>
+        <EditModalForm
+          show={showEditModal}
+          onHide={() => setShowEditModal(false)}
+          post={selectedPost}
+        />
       </div>
     </div>
   );
