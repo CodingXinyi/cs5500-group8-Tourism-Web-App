@@ -39,6 +39,79 @@ router.post("/message", async (req, res) => {
       }
     });
     
+    // query database for related information
+    let contextData = {};
+    
+    // get post information
+    if (message.toLowerCase().includes("post") || 
+        message.toLowerCase().includes("帖子") || 
+        message.toLowerCase().includes("地点")) {
+      const posts = await prisma.post.findMany({
+        include: {
+          user: {
+            select: {
+              username: true,
+              name: true
+            }
+          },
+          comments: true,
+          ratings: true
+        }
+      });
+      contextData.posts = posts;
+    }
+    
+    // get comment information
+    if (message.toLowerCase().includes("comment") || 
+        message.toLowerCase().includes("评论")) {
+      const comments = await prisma.postComment.findMany({
+        include: {
+          user: {
+            select: {
+              username: true
+            }
+          },
+          post: {
+            select: {
+              postName: true
+            }
+          }
+        }
+      });
+      contextData.comments = comments;
+    }
+    
+    // get rating information
+    if (message.toLowerCase().includes("rating") || 
+        message.toLowerCase().includes("评分") || 
+        message.toLowerCase().includes("评价")) {
+      const ratings = await prisma.postRating.findMany({
+        include: {
+          user: {
+            select: {
+              username: true
+            }
+          },
+          post: {
+            select: {
+              postName: true,
+              averageRating: true
+            }
+          }
+        }
+      });
+      contextData.ratings = ratings;
+    }
+    
+    // build prompt to send to AI, including context data
+    let prompt = `请根据以下数据库信息回答用户问题。用户问题: ${message}\n\n`;
+    
+    if (Object.keys(contextData).length > 0) {
+      prompt += "数据库信息:\n" + JSON.stringify(contextData, null, 2) + "\n\n";
+    } else {
+      prompt += "没有找到与问题相关的数据库信息。请尽量根据一般知识回答。\n\n";
+    }
+    
     // call AI API
     const response = await fetch(API_URL, {
       method: 'POST',
@@ -46,12 +119,12 @@ router.post("/message", async (req, res) => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        contents: [{ parts: [{ text: message }] }]
+        contents: [{ parts: [{ text: prompt }] }]
       })
     });
     
     const responseData = await response.json();
-    const aiReply = responseData?.candidates?.[0]?.content?.parts?.[0]?.text || 'request failed, please try it later';
+    const aiReply = responseData?.candidates?.[0]?.content?.parts?.[0]?.text || '请求失败，请稍后再试';
     
     // save AI reply
     const savedMessage = await prisma.aiChatMessage.create({
@@ -65,8 +138,8 @@ router.post("/message", async (req, res) => {
     
     res.json(savedMessage);
   } catch (error) {
-    console.error("request failed:", error);
-    res.status(500).json({ error: "request failed, please try it later" });
+    console.error("请求失败:", error);
+    res.status(500).json({ error: "请求失败，请稍后再试" });
   }
 });
 
