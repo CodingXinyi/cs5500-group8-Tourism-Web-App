@@ -254,4 +254,128 @@ describe('API Tests', () => {
       expect(response.body.error).toBe('post not found');
     });
   });
+
+  // Rating API tests
+  describe('Rating API', () => {
+    // Create a new post before testing
+    beforeAll(async () => {
+      const postData = {
+        userId: userId,
+        postName: "Test Post for Rating",
+        location: "Test Location",
+        introduction: "Test Introduction",
+        description: "Test Description",
+        policy: "Test Policy",
+        pictureUrl: "http://example.com/test.jpg"
+      };
+
+      const response = await request(app)
+        .post('/posts')
+        .send(postData)
+        .expect(200);
+      
+      postId = response.body.id;
+    });
+
+    it('should create a new rating', async () => {
+      const ratingData = {
+        userId: userId,
+        postId: postId,
+        rating: 4
+      };
+
+      const response = await request(app)
+        .post('/rating')
+        .send(ratingData)
+        .expect(200);
+
+      expect(response.body.rating).toBe(ratingData.rating);
+      expect(response.body.userId).toBe(userId);
+      expect(response.body.postId).toBe(postId);
+    });
+
+    it('should get all ratings for a post', async () => {
+      const response = await request(app)
+        .get(`/rating/posts/${postId}`)
+        .expect(200);
+
+      expect(Array.isArray(response.body)).toBe(true);
+    });
+
+    it('should update a rating', async () => {
+      const updateData = {
+        userId: Number(userId),
+        postId: Number(postId),
+        rating: 5
+      };
+
+      const response = await request(app)
+        .put('/rating')
+        .send(updateData)
+        .expect(200);
+
+      expect(response.body.rating).toBe(updateData.rating);
+    });
+
+    it('should delete a rating', async () => {
+      const deleteData = {
+        userId: Number(userId),
+        postId: Number(postId)
+      };
+
+      await request(app)
+        .delete('/rating')
+        .send(deleteData)
+        .expect(200);
+    });
+  });
+
+  // Comment API tests
+  describe('Comment API', () => {
+    let commentId;
+
+    it('should create a new comment', async () => {
+      const commentData = {
+        userId: Number(userId),
+        postId: Number(postId),
+        comment: 'Test comment'
+      };
+
+      const response = await request(app)
+        .post('/comments')
+        .send(commentData)
+        .expect(200);
+
+      expect(response.body).toHaveProperty('id');
+      expect(response.body.comment).toBe(commentData.comment);
+      commentId = response.body.id;
+    });
+
+    it('should update a comment', async () => {
+      const updateData = {
+        comment: 'Updated test comment'
+      };
+
+      const response = await request(app)
+        .put(`/comments/${commentId}`)
+        .send(updateData)
+        .expect(200);
+
+      expect(response.body.comment).toBe(updateData.comment);
+    });
+
+    it('should delete a comment', async () => {
+      await request(app)
+        .delete(`/comments/${commentId}`)
+        .expect(200);
+
+      // Verify comment is deleted
+      const response = await request(app)
+        .get(`/posts/${postId}/comments`)
+        .expect(200);
+
+      const deletedComment = response.body.find(c => c.id === commentId);
+      expect(deletedComment).toBeUndefined();
+    });
+  });
 }); 
