@@ -9,6 +9,7 @@ interface ModalFormProps {
 
 type postType = {
   userId: number;
+  rating:number;
   postName: string;
   location: string;
   introduction: string;
@@ -19,45 +20,58 @@ type postType = {
 
 const ModalForm: React.FC<ModalFormProps> = ({ show, onHide }) => {
   const [formData, setFormData] = useState({
-    rating: '',
+    rating: 5,
     location: '',
     landmarkName: '',
     description: '',
     introduction: '',
     policy: '',
-    image1: null,
+    pictureUrl: '', // Use this field for the image URL
   });
 
+  // const handleInputChange = (
+  //   e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  // ) => {
+  //   const { name, value } = e.target;
+  //   setFormData({ ...formData, [name]: value });
+  // };
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, files } = e.target;
-    setFormData({ ...formData, [name]: files ? files[0] : null });
+    // 如果是评分字段，则将其转换为数字类型
+    if (name === 'rating') {
+      setFormData({
+        ...formData,
+        [name]: value ? Number(value) : 5, 
+      });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleSubmit = async () => {
     const postData: postType = {
-      userId: 1, // You can dynamically set this based on the logged-in user
+      userId: 1, 
+      rating: formData.rating, 
       postName: formData.landmarkName,
       location: formData.location,
       introduction: formData.introduction,
       description: formData.description,
       policy: formData.policy,
-      pictureUrl: formData.image1 ? URL.createObjectURL(formData.image1) : '',
+      pictureUrl: formData.pictureUrl,
     };
 
+    console.log(postData); 
     try {
-      await sendPost(postData); // Assuming sendPost accepts postData as argument
-      onHide(); // Close the modal after submission
+      await sendPost(postData); 
+      onHide(); 
     } catch (error) {
-      console.error('Error while posting:', error);
+      console.error('提交失败:', error);
     }
   };
+
 
   return (
     <Modal show={show} onHide={onHide}>
@@ -135,12 +149,14 @@ const ModalForm: React.FC<ModalFormProps> = ({ show, onHide }) => {
             />
           </Form.Group>
 
-          <Form.Group className="mb-3" controlId="formImage1">
-            <Form.Label>Image 1</Form.Label>
+          <Form.Group className="mb-3" controlId="formPictureUrl">
+            <Form.Label>Picture URL</Form.Label>
             <Form.Control
-              type="file"
-              name="image1"
-              onChange={handleFileChange}
+              type="text"
+              name="pictureUrl"
+              value={formData.pictureUrl}
+              onChange={handleInputChange}
+              placeholder="Enter image URL"
             />
           </Form.Group>
         </Form>

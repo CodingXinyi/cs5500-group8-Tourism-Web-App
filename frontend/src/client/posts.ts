@@ -2,6 +2,7 @@ import axios from 'axios';
 
 type postType = {
   userId: number;
+  rating:number;
   postName: string;
   location: string;
   introduction: string;

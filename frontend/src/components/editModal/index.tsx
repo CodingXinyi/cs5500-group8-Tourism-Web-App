@@ -122,6 +122,17 @@ const EditModalForm: React.FC<EditModalFormProps> = ({
               rows={3}
             />
           </Form.Group>
+
+          <Form.Group className="mb-3" controlId="formPictureUrl">
+                      <Form.Label>Picture URL</Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="pictureUrl"
+                        value={formData.pictureUrl}
+                        onChange={handleInputChange}
+                        placeholder="Enter image URL"
+                      />
+                    </Form.Group>
         </Form>
       </Modal.Body>
       <Modal.Footer>
