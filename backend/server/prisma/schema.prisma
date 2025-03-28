@@ -1,0 +1,61 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Post {
+  id                   Int      @id @default(autoincrement())
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  postName             String   @db.VarChar(255)
+  location             String   @db.VarChar(255)
+  introduction         String   @db.Text
+  description          String   @db.Text
+  policy               String   @db.Text
+  pictureUrl           String   @db.VarChar(500)
+  user                 User     @relation(fields: [userId], references: [id])
+  userId               Int 
+  ratings              PostRating[]
+  comments             PostComment[]
+  averageRating        Float?   @default(0) // Stores the average rating of the post
+}
+
+model User {
+  id            Int           @id @default(autoincrement())
+  email         String        @unique
+  username      String        @unique
+  password      String        
+  name          String?
+  posts         Post[]
+  ratings       PostRating[]
+  comments      PostComment[]
+}
+
+model PostRating {
+  id        Int     @id @default(autoincrement())
+  user      User    @relation(fields: [userId], references: [id])
+  userId    Int
+  post      Post    @relation(fields: [postId], references: [id])
+  postId    Int
+  rating    Float   @db.Float // Rating score (e.g., 1.0 to 5.0)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, postId]) // Ensures a user can only rate a post once
+}
+
+model PostComment {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    Int
+  comment   String   @db.Text // The comment content
+  createdAt DateTime @default(now())
+}

@@ -1,0 +1,145 @@
+[
+  {
+    "destinationId": 1,
+    "image": ["pictures/1.1.jpg", "pictures/1.2.jpg", "pictures/1.3.jpg"],
+    "title": "Grand Canyon National Park",
+    "location": "Tusayan, Arizona, US",
+    "introduction": "A magnificent canyon located in Arizona, USA, renowned for its towering red cliffs, intricate rock formations, and panoramic desert vistas. A true marvel of nature offering unforgettable views and a sense of wonder.",
+    "policy": "Entrance fees apply; no drones allowed; camping permits required.",
+    "star": 4.6,
+    "description": "this is an assignment relate to propulsion",
+    "openHour": "Open year-round, 24 hours a day. Visitor centers open from 8 AM to 5 PM."
+  },
+  {
+    "destinationId": 2,
+    "image": ["pictures/2.1.jpg", "pictures/2.2.jpg", "pictures/2.3.jpg"],
+    "title": "Great Barrier Reef",
+    "location": "Cairns, Queensland, Australia",
+    "introduction": "The world’s largest coral reef in Queensland, Australia, ideal for diving and marine life exploration.",
+    "policy": "Snorkeling permits needed; protect coral; no fishing in protected zones.",
+    "star": 4.5,
+    "description": "this is an assignment relate to propulsion",
+    "openHour": "Open year-round, with tours available daily from 8 AM to 5 PM. Best visiting months are from May to October."
+  },
+  {
+    "destinationId": 3,
+    "image": ["pictures/3.1.jpg", "pictures/3.2.jpg", "pictures/3.3.jpg"],
+    "title": "Santorini",
+    "location": "Fira, South Aegean, Greece",
+    "introduction": "A Greek island known for its white houses, blue domes, and stunning sunsets over the Aegean Sea.",
+    "policy": "Respect local customs; avoid crowded areas during peak times.",
+    "star": 4.2,
+    "description": "this is an assignment relate to propulsion",
+    "openHour": "Open year-round. Tourist sites typically open from 9 AM to 7 PM. Peak season is from April to October."
+  },
+  {
+    "destinationId": 4,
+    "image": ["pictures/4.1.jpg", "pictures/4.2.jpg", "pictures/4.3.jpg"],
+    "title": "Banff National Park",
+    "location": "Banff, Alberta, Canada",
+    "introduction": "A Canadian park in Alberta with turquoise lakes, mountain views, and abundant wildlife.",
+    "policy": "Park pass required; no feeding wildlife; follow trail guidelines.",
+    "star": 4.4,
+    "description": "this is an assignment relate to propulsion",
+    "openHour": "Open year-round. Visitor centers are open from 9 AM to 5 PM. Summer months (June-August) are the busiest."
+  },
+  {
+    "destinationId": 5,
+    "image": ["pictures/5.1.jpg", "pictures/5.2.jpg", "pictures/5.3.jpg"],
+    "title": "Maldives",
+    "location": "Malé, North Malé Atoll, Maldives",
+    "introduction": "A tropical paradise with clear waters, luxury resorts, and vibrant coral reefs.",
+    "policy": "Visa-free for most; respect marine life; no collecting coral or shells.",
+    "star": 4.7,
+    "description": "this is an assignment relate to propulsion",
+    "openHour": "Open year-round, with resorts and activities available daily. Peak season runs from November to April."
+  },
+  {
+    "destinationId": 6,
+    "image": ["pictures/6.1.jpg", "pictures/6.2.jpg", "pictures/6.3.jpg"],
+    "title": "Mount Fuji",
+    "location": "Fujiyoshida, Yamanashi, Japan",
+    "introduction": "Japan’s iconic volcanic peak, known for its beauty and cultural significance.",
+    "policy": "Hiking season is July-September; respect climbing regulations.",
+    "star": 4.5,
+    "description": "this is an assignment relate to propulsion",
+    "openHour": "Open for climbing from early July to early September. Trails open from sunrise to sunset."
+  },
+  {
+    "destinationId": 7,
+    "image": ["pictures/7.1.jpg", "pictures/7.2.jpg"],
+    "title": "Eiffel Tower",
+    "location": "Paris, France",
+    "introduction": "An iconic iron tower offering panoramic views of Paris and a symbol of French art and culture.",
+    "policy": "Tickets required for access; no large bags allowed.",
+    "star": 4.8,
+    "description": "A must-see landmark in Paris with breathtaking views of the city.",
+    "openHour": "Open daily from 9:00 AM to 12:45 AM."
+  },
+  {
+    "destinationId": 8,
+    "image": ["pictures/8.1.jpg", "pictures/8.2.jpg"],
+    "title": "Machu Picchu",
+    "location": "Cusco Region, Peru",
+    "introduction": "Ancient Incan city set high in the Andes mountains, offering incredible historical and scenic views.",
+    "policy": "Tickets required; no drones allowed; respect the site’s heritage.",
+    "star": 4.9,
+    "description": "A UNESCO World Heritage site, perfect for hiking and exploring ancient ruins.",
+    "openHour": "Open daily from 6:00 AM to 5:00 PM."
+  },
+  {
+    "destinationId": 9,
+    "image": ["pictures/9.1.jpg", "pictures/9.2.jpg"],
+    "title": "Colosseum",
+    "location": "Rome, Italy",
+    "introduction": "A monumental amphitheater in Rome, known for its ancient gladiatorial contests and historical significance.",
+    "policy": "Tickets required for entry; no large bags allowed.",
+    "star": 4.7,
+    "description": "An ancient Roman site showcasing architectural brilliance and historical culture.",
+    "openHour": "Open daily from 8:30 AM to 7:00 PM."
+  },
+  {
+    "destinationId": 10,
+    "image": ["pictures/10.1.jpg", "pictures/10.2.jpg"],
+    "title": "Great Wall of China",
+    "location": "Beijing, China",
+    "introduction": "A historic series of fortifications stretching across northern China, offering incredible views and ancient architecture.",
+    "policy": "Tickets required; no littering; follow safety signs.",
+    "star": 4.8,
+    "description": "A symbol of China's ancient civilization and military prowess.",
+    "openHour": "Open daily from 7:30 AM to 6:00 PM."
+  },
+  {
+    "destinationId": 11,
+    "image": ["pictures/11.1.jpg", "pictures/11.2.jpg"],
+    "title": "Pyramids of Giza",
+    "location": "Giza Governorate, Egypt",
+    "introduction": "The last remaining ancient wonder of the world, known for their grandeur and historical significance.",
+    "policy": "Tickets required; no climbing on the pyramids.",
+    "star": 4.9,
+    "description": "A majestic ancient site offering insight into Egypt’s incredible history.",
+    "openHour": "Open daily from 8:00 AM to 5:00 PM."
+  },
+  {
+    "destinationId": 12,
+    "image": ["pictures/12.1.jpg", "pictures/12.2.jpg"],
+    "title": "Taj Mahal",
+    "location": "Agra, Uttar Pradesh, India",
+    "introduction": "A beautiful white marble mausoleum and a symbol of love, attracting millions of visitors each year.",
+    "policy": "Tickets required; no large bags or food allowed.",
+    "star": 4.8,
+    "description": "An architectural masterpiece and a UNESCO World Heritage site.",
+    "openHour": "Open daily from 6:00 AM to 7:00 PM."
+  },
+  {
+    "destinationId": 13,
+    "image": ["pictures/13.1.jpg", "pictures/13.2.jpg"],
+    "title": "Aurora Borealis",
+    "location": "Tromsø, Norway",
+    "introduction": "A stunning natural light display visible in the Arctic regions, particularly in Tromsø, Norway.",
+    "policy": "No special tickets required; respect the environment.",
+    "star": 4.9,
+    "description": "A natural wonder offering unforgettable views of the northern lights.",
+    "openHour": "Visible from September to April, depending on weather conditions."
+  }
+]
