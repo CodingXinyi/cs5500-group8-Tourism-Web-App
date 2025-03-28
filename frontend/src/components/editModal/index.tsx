@@ -15,7 +15,7 @@ type Post = {
   introduction: string;
   description: string;
   policy: string;
-  pictureUrl: string[];
+  pictureUrl: string;
 };
 
 const EditModalForm: React.FC<EditModalFormProps> = ({
@@ -29,7 +29,7 @@ const EditModalForm: React.FC<EditModalFormProps> = ({
     introduction: '',
     description: '',
     policy: '',
-    pictureUrl: [] as string[],
+    pictureUrl: '',
   });
 
   useEffect(() => {

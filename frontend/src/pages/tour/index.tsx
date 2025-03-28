@@ -1,21 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import './index.css';
 import Header from '../home/components/header';
-import { IoLocationOutline } from 'react-icons/io5';
 import { Link, useNavigate } from 'react-router-dom';
 import ModalForm from '../../components/inputPost';
 import EditModalForm from '../../components/editModal';
 import { deletePosts, getPost } from '../../client/posts';
 
-type Post = {
+interface Post {
   id: string;
   postName: string;
   location: string;
   introduction: string;
   description: string;
   policy: string;
-  pictureUrl: string[];
-};
+  pictureUrl: string;
+}
 
 export default function Tour() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -83,7 +82,7 @@ export default function Tour() {
             color: 'gray',
           }}
         >
-          Embark on a journey to explore the world’s most breathtaking
+          Embark on a journey to explore the world's most breathtaking
           landscapes and iconic landmarks.
         </p>
         <button
@@ -107,7 +106,7 @@ export default function Tour() {
             >
               <Link to={`/tour/${d.id}`}>
                 <img
-                  src={d.pictureUrl[0]}
+                  src={d.pictureUrl}
                   className="card-img-top"
                   style={{ height: '200px', objectFit: 'cover' }}
                   alt={d.postName}
