@@ -36,6 +36,8 @@ model User {
   posts         Post[]
   ratings       PostRating[]
   comments      PostComment[]
+  chatSessions  AiChatSession[]
+  chatMessages  AiChatMessage[]
 }
 
 model PostRating {
@@ -58,4 +60,24 @@ model PostComment {
   postId    Int
   comment   String   @db.Text // The comment content
   createdAt DateTime @default(now())
+}
+
+model AiChatSession {
+  id        Int             @id @default(autoincrement())
+  userId    Int
+  user      User            @relation(fields: [userId], references: [id])
+  messages  AiChatMessage[]
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+}
+
+model AiChatMessage {
+  id        Int           @id @default(autoincrement())
+  sessionId Int
+  userId    Int
+  role      String        // 'user' or 'assistant'
+  content   String        @db.Text
+  session   AiChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  user      User          @relation(fields: [userId], references: [id])
+  createdAt DateTime      @default(now())
 }

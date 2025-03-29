@@ -8,6 +8,7 @@ import userRoutes from "./routes/userRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
 import commentRoutes from "./routes/commentRoutes.js";
 import ratingRoutes from "./routes/ratingRoutes.js";
+import aiChatRoutes from "./routes/aiChatRoutes.js";
 
 const app = express();
 
@@ -24,7 +25,7 @@ app.use("/user", userRoutes);
 app.use("/posts", postRoutes);
 app.use("/comments", commentRoutes);
 app.use("/rating", ratingRoutes);
-/** Comment **/
+app.use("/aiChat", aiChatRoutes);
 
 
 // conditionally start the server
