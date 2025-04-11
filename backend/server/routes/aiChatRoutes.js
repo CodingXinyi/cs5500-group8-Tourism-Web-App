@@ -104,7 +104,19 @@ router.post("/message", async (req, res) => {
     }
     
     // build prompt to send to AI, including context data
-    let prompt = `Please answer the user's question based on the following database information. User question: ${message}\n\n`;
+    let prompt = `You are a helpful assistant for a blog system. Please provide a clear and concise response to the user's question based on the following database information. When listing items, use commas for separation instead of bullets or asterisks. Keep the response friendly and professional.
+
+Database context:
+{database_info}
+
+User question: ${message}
+
+Remember to:
+1. Format lists with commas instead of bullets
+2. Keep responses concise and relevant
+3. If no relevant information is found, politely indicate that
+4. Use natural, conversational language
+`;
     
     if (Object.keys(contextData).length > 0) {
       prompt += "Database information:\n" + JSON.stringify(contextData, null, 2) + "\n\n";
