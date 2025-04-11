@@ -19,35 +19,35 @@ const AIChatBot = () => {
   // 使用 useCallback 包装函数，确保依赖项不变时函数引用不变
   const loadSessionMessages = useCallback(async (sid: number) => {
     try {
-      console.log(`正在加载会话${sid}的消息...`);
+      console.log(`Loading messages for ${sid}...`);
       const response = await axios.get(`http://localhost:8000/aiChat/session/${sid}`);
-      console.log('加载消息成功:', response.data);
+      console.log('Messages loaded successfully:', response.data);
       const formattedMessages = response.data.map((msg: any) => ({
         role: msg.role,
         content: msg.content
       }));
       setMessages(formattedMessages);
     } catch (error) {
-      console.error('加载消息失败:', error);
+      console.error('Failed to load messages:', error);
     }
   }, []);
 
   // 使用 useCallback 包装 createChatSession 函数
   const createChatSession = useCallback(async () => {
     if (!userId) {
-      console.error('用户未登录，无法创建聊天会话');
+      console.error('User not logged in, cannot create chat session');
       return;
     }
 
     try {
-      console.log('正在创建聊天会话，用户ID:', userId);
+      console.log('Creating chat session, user ID:', userId);
       const response = await axios.post('http://localhost:8000/aiChat/session', { userId });
-      console.log('会话创建成功:', response.data);
+      console.log('Session created successfully:', response.data);
       setSessionId(response.data.id);
       // 加载现有会话消息
       loadSessionMessages(response.data.id);
     } catch (error) {
-      console.error('创建会话失败:', error);
+      console.error('Failed to create session:', error);
     }
   }, [userId, loadSessionMessages]);
 
@@ -62,46 +62,31 @@ const AIChatBot = () => {
   const sendMessage = useCallback(async () => {
     if (!input.trim()) return;
     if (!userId) {
-      console.error('用户未登录，无法发送消息');
+      alert('Please login before using the AI assistant');
       return;
     }
-    if (!sessionId) {
-      await createChatSession();
-      if (!sessionId) return;
-    }
-
-    const userMessage = { role: 'user', content: input };
-    setMessages(prev => [...prev, userMessage]);
-    setInput('');
+    
     setLoading(true);
-
     try {
-      const requestData = {
+      const userMessage = { role: 'user', content: input };
+      setMessages(prev => [...prev, userMessage]);
+      setInput('');
+
+      const response = await axios.post('http://localhost:8000/aiChat/message', {
         sessionId,
         userId,
         message: input
-      };
-      console.log('发送数据:', requestData);
-      
-      const response = await axios.post('http://localhost:8000/aiChat/message', requestData);
-      console.log('接收到回复:', response.data);
+      });
 
-      const aiReply = {
-        role: 'assistant',
-        content: response.data.content
-      };
-      
-      setMessages(prev => [...prev, aiReply]);
+      const aiMessage = { role: 'assistant', content: response.data.content };
+      setMessages(prev => [...prev, aiMessage]);
     } catch (error) {
-      console.error('发送消息失败:', error);
-      setMessages(prev => [
-        ...prev,
-        { role: 'assistant', content: '请求失败，请稍后再试。' }
-      ]);
+      console.error('Failed to send message:', error);
+      alert('Failed to send message, please try again later');
     } finally {
       setLoading(false);
     }
-  }, [input, userId, sessionId, createChatSession]);
+  }, [input, userId, sessionId]);
 
   return (
     <div className="ai-chatbot">
@@ -109,7 +94,7 @@ const AIChatBot = () => {
         className="chatbot-button" 
         onClick={() => {
           if (!currentUser) {
-            alert('请先登录再使用AI助手');
+            alert('Please login before using the AI assistant');
             return;
           }
           setIsOpen(!isOpen);
@@ -122,7 +107,7 @@ const AIChatBot = () => {
         <div className="chat-window">
           <div className="chat-messages">
             {messages.length === 0 && !loading && (
-              <div className="welcome-message">您好！有什么可以帮助您的？</div>
+              <div className="welcome-message">Hello! How can I help you?</div>
             )}
             {messages.map((msg, index) => (
               <div key={index} className={`chat-message ${msg.role}`}>
@@ -131,7 +116,7 @@ const AIChatBot = () => {
             ))}
             {loading && (
               <div className="chat-message assistant loading">
-                正在思考...
+                Thinking...
               </div>
             )}
           </div>
@@ -141,11 +126,11 @@ const AIChatBot = () => {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-              placeholder="请输入问题..."
+              placeholder="Enter your question..."
               disabled={loading}
             />
             <button onClick={sendMessage} disabled={loading}>
-              发送
+              Send
             </button>
           </div>
         </div>
