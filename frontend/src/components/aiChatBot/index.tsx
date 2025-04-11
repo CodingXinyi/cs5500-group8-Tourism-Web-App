@@ -3,6 +3,11 @@ import axios from 'axios';
 import './index.scss';
 import { AuthContext } from '../../context/authContext';  // 调整路径以匹配你的项目结构
 
+// 添加一个处理消息内容的函数
+const cleanMessageContent = (content: string) => {
+  return content.replace(/\s*\*\s*/g, ', ');
+};
+
 const AIChatBot = () => {
   const { currentUser } = useContext(AuthContext);  // 从AuthContext获取当前用户
   const [isOpen, setIsOpen] = useState(false);
@@ -111,7 +116,7 @@ const AIChatBot = () => {
             )}
             {messages.map((msg, index) => (
               <div key={index} className={`chat-message ${msg.role}`}>
-                {msg.content}
+                {cleanMessageContent(msg.content)}
               </div>
             ))}
             {loading && (
