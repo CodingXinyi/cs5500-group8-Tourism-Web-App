@@ -17,8 +17,8 @@ router.post("/session", async (req, res) => {
     
     res.json(session);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "create session failed" });
+    console.error("Failed to create session");
+    res.status(500).json({ error: "Failed to create session" });
   }
 });
 
@@ -104,12 +104,12 @@ router.post("/message", async (req, res) => {
     }
     
     // build prompt to send to AI, including context data
-    let prompt = `请根据以下数据库信息回答用户问题。用户问题: ${message}\n\n`;
+    let prompt = `Please answer the user's question based on the following database information. User question: ${message}\n\n`;
     
     if (Object.keys(contextData).length > 0) {
-      prompt += "数据库信息:\n" + JSON.stringify(contextData, null, 2) + "\n\n";
+      prompt += "Database information:\n" + JSON.stringify(contextData, null, 2) + "\n\n";
     } else {
-      prompt += "没有找到与问题相关的数据库信息。请尽量根据一般知识回答。\n\n";
+      prompt += "No relevant database information found. Please answer based on general knowledge.\n\n";
     }
     
     // call AI API
@@ -124,7 +124,7 @@ router.post("/message", async (req, res) => {
     });
     
     const responseData = await response.json();
-    const aiReply = responseData?.candidates?.[0]?.content?.parts?.[0]?.text || '请求失败，请稍后再试';
+    const aiReply = responseData?.candidates?.[0]?.content?.parts?.[0]?.text || 'Request failed, please try it later';
     
     // save AI reply
     const savedMessage = await prisma.aiChatMessage.create({
@@ -138,8 +138,8 @@ router.post("/message", async (req, res) => {
     
     res.json(savedMessage);
   } catch (error) {
-    console.error("请求失败:", error);
-    res.status(500).json({ error: "请求失败，请稍后再试" });
+    console.error("Request failure:", error);
+    res.status(500).json({ error: "Request failed, please try again" });  
   }
 });
 
@@ -159,8 +159,8 @@ router.get("/session/:sessionId", async (req, res) => {
     
     res.json(messages);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "get messages failed" });
+    console.error("Failed to get messages");
+    res.status(500).json({ error: "Failed to get messages" });
   }
 });
 
