@@ -1,0 +1,45 @@
+/* Modal styles */
+.modal-content {
+    background-color: #333; /* Dark background for the modal */
+    color: #fff; /* White text color */
+    border-radius: 10px;
+    border: 1px solid #444; /* Slight border */
+  }
+  
+  .modal-header {
+    background-color: #444; /* Darker header */
+    border-bottom: 2px solid #555; /* Slight border below header */
+  }
+  
+  .modal-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .modal-body {
+    background-color: #333;
+  }
+  
+  .form-label {
+    color: #ddd; /* Light color for form labels */
+  }
+  
+  .form-control {
+    background-color: #555; /* Dark input field background */
+    color: #fff; /* White text in input */
+    border-radius: 5px;
+    border: 1px solid #666; /* Darker border */
+  }
+  
+  .form-control:focus {
+    border-color: #ffa230; /* Focus border color */
+    background-color: #444;
+  }
+  
+  button {
+    border-radius: 5px; /* Rounded button corners */
+  }
+  
+  button:hover {
+    background-color: #ff8c34; /* Darker blue on hover */
+  }

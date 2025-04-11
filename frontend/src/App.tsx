@@ -24,7 +24,7 @@ function App() {
             <Route path="/login" element={<Signin />}></Route>
             <Route path="/register" element={<Register />}></Route>
             <Route
-              path="/tour/:destinationName"
+              path="/tour/:destinationId"
               element={<Destination />}
             ></Route>
           </Routes>
