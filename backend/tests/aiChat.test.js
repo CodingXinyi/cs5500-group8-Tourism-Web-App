@@ -10,13 +10,10 @@ describe('AI Chat API Tests', () => {
   let sessionId;
   let testUser;
   
-  // before all tests
   beforeAll(async () => {
-    // clean database related tables
+    // 清理数据库
     await prisma.aiChatMessage.deleteMany();
     await prisma.aiChatSession.deleteMany();
-    
-    // ensure no same test user exists
     await prisma.user.deleteMany({
       where: {
         OR: [
@@ -26,25 +23,18 @@ describe('AI Chat API Tests', () => {
       }
     });
     
-    // create test user
-    try {
-      testUser = await prisma.user.create({
-        data: {
-          email: 'aitest@example.com',
-          username: 'aitestuser',
-          password: 'testpassword123',
-          name: 'AI Test User'
-        }
-      });
-      
-      console.log('create test user successfully:', testUser);
-      userId = testUser.id;
-    } catch (error) {
-      console.error('create test user failed:', error);
-      throw error;
-    }
-    
-    // mock fetch
+    // 创建测试用户
+    testUser = await prisma.user.create({
+      data: {
+        email: 'aitest@example.com',
+        username: 'aitestuser',
+        password: 'testpassword123',
+        name: 'AI Test User'
+      }
+    });
+    userId = testUser.id;
+
+    // Mock Gemini API 响应
     global.fetch = vi.fn().mockImplementation(() => 
       Promise.resolve({
         json: () => Promise.resolve({
@@ -62,52 +52,23 @@ describe('AI Chat API Tests', () => {
         })
       })
     );
-  }, 30000);
+  }, 10000);
   
-  // after all tests
   afterAll(async () => {
-    // clean database
     await prisma.aiChatMessage.deleteMany();
     await prisma.aiChatSession.deleteMany();
-    
-    // only delete user when it exists
     if (userId) {
-      try {
-        await prisma.user.delete({
-          where: {
-            id: userId
-          }
-        });
-        console.log('delete test user successfully');
-      } catch (error) {
-        console.warn('delete test user failed:', error.message);
-      }
+      await prisma.user.delete({ where: { id: userId } });
     }
-    
-    // restore original fetch
     global.fetch = fetch;
-    
     await prisma.$disconnect();
   }, 10000);
   
-  // AI聊天测试
-  describe('AI Chat API', () => {
+  describe('Chat Session API', () => {
     it('should create a new chat session', async () => {
-      // first confirm user ID is valid
-      if (!userId) {
-        console.error('test user ID is invalid');
-        throw new Error('test user ID is invalid');
-      }
-      
       const response = await request(app)
         .post('/aiChat/session')
         .send({ userId });
-      
-      console.log('create session response:', response.body);
-      
-      if (response.status !== 200) {
-        console.error('create session failed:', response.body);
-      }
       
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('id');
@@ -115,66 +76,138 @@ describe('AI Chat API Tests', () => {
       
       sessionId = response.body.id;
     });
-    
-    it('should create a session in database for later tests', async () => {
-      // if API create session failed, create a session in database directly
-      if (!sessionId) {
-        const session = await prisma.aiChatSession.create({
-          data: {
-            userId
-          }
+
+    it('should fail to create session with invalid userId', async () => {
+      const response = await request(app)
+        .post('/aiChat/session')
+        .send({ userId: 'invalid' });
+      
+      expect(response.status).toBe(500);
+    });
+  });
+
+  describe('Chat Message API', () => {
+    it('should send message and get AI reply', async () => {
+      const message = 'Tell me about posts';
+      
+      const response = await request(app)
+        .post('/aiChat/message')
+        .send({
+          sessionId,
+          userId,
+          message
         });
-        sessionId = session.id;
-        console.log('create session in database directly:', sessionId);
-      }
       
-      expect(sessionId).toBeDefined();
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveProperty('id');
+      expect(response.body.role).toBe('assistant');
+      expect(response.body.content).toBeDefined();
     });
-    
-    it('should create a message in database for later tests', async () => {
-      // manually add test message to database
-      const userMessage = await prisma.aiChatMessage.create({
-        data: {
+
+    it('should handle message with post context', async () => {
+      const message = 'What posts are available?';
+      
+      const response = await request(app)
+        .post('/aiChat/message')
+        .send({
           sessionId,
           userId,
-          role: 'user',
-          content: 'test message'
-        }
-      });
+          message
+        });
       
-      const aiMessage = await prisma.aiChatMessage.create({
-        data: {
+      expect(response.status).toBe(200);
+      expect(response.body.content).toBeDefined();
+    });
+
+    it('should handle message with comment context', async () => {
+      const message = 'Show me the comments';
+      
+      const response = await request(app)
+        .post('/aiChat/message')
+        .send({
           sessionId,
           userId,
-          role: 'assistant',
-          content: 'test reply'
-        }
-      });
+          message
+        });
       
-      expect(userMessage).toHaveProperty('id');
-      expect(aiMessage).toHaveProperty('id');
+      expect(response.status).toBe(200);
+      expect(response.body.content).toBeDefined();
     });
-    
+
+    it('should handle message with rating context', async () => {
+      const message = 'What are the ratings?';
+      
+      const response = await request(app)
+        .post('/aiChat/message')
+        .send({
+          sessionId,
+          userId,
+          message
+        });
+      
+      expect(response.status).toBe(200);
+      expect(response.body.content).toBeDefined();
+    });
+  });
+
+  describe('Chat History API', () => {
     it('should get all messages of a session', async () => {
       const response = await request(app)
         .get(`/aiChat/session/${sessionId}`);
       
-      console.log('get messages response:', response.body);
-      
-      if (response.status !== 200) {
-        console.error('get messages failed:', response.body);
-      }
-      
       expect(response.status).toBe(200);
       expect(Array.isArray(response.body)).toBe(true);
-      expect(response.body.length).toBeGreaterThanOrEqual(2);
+      expect(response.body.length).toBeGreaterThan(0);
       
-      // verify messages
-      const userMsg = response.body.find(m => m.role === 'user');
-      const aiMsg = response.body.find(m => m.role === 'assistant');
+      // 验证消息格式
+      const message = response.body[0];
+      expect(message).toHaveProperty('id');
+      expect(message).toHaveProperty('role');
+      expect(message).toHaveProperty('content');
+      expect(message).toHaveProperty('sessionId');
+      expect(message).toHaveProperty('userId');
+    });
+
+    it('should handle invalid session ID', async () => {
+      const response = await request(app)
+        .get('/aiChat/session/999999');
       
-      expect(userMsg).toBeDefined();
-      expect(aiMsg).toBeDefined();
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual([]);
+    });
+  });
+
+  describe('Error Handling', () => {
+    it('should handle missing required fields in message API', async () => {
+      const response = await request(app)
+        .post('/aiChat/message')
+        .send({});
+      
+      expect(response.status).toBe(500);
+    });
+
+    it('should handle AI API failure gracefully', async () => {
+      // 临时修改 mock 以模拟 API 失败
+      global.fetch = vi.fn().mockRejectedValue(new Error('API Error'));
+
+      const response = await request(app)
+        .post('/aiChat/message')
+        .send({
+          sessionId,
+          userId,
+          message: 'test message'
+        });
+      
+      expect(response.status).toBe(500);
+      
+      // 恢复原来的 mock
+      global.fetch = vi.fn().mockImplementation(() => 
+        Promise.resolve({
+          json: () => Promise.resolve({
+            candidates: [{ content: { parts: [{ text: 'Test reply' }] } }]
+          })
+        })
+      );
     });
   });
 }); 
