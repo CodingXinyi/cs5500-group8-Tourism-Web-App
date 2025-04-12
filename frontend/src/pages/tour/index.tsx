@@ -152,9 +152,13 @@ export default function Tour() {
             </div>
           ))}
         </div>
-        <div style={{ textAlign: 'center', marginTop: '20px' }}>
+        <div className="pagination-container">
           {Array.from({ length: totalPages }, (_, i) => (
-            <button key={i} onClick={() => setCurrentPage(i + 1)}>
+            <button
+              key={i}
+              className={`pagination-button ${currentPage === i + 1 ? 'active' : ''}`}
+              onClick={() => setCurrentPage(i + 1)}
+            >
               {i + 1}
             </button>
           ))}
