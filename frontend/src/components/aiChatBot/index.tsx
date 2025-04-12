@@ -19,7 +19,7 @@ const AIChatBot = () => {
   const [loading, setLoading] = useState(false);
 
   // 从currentUser对象中获取userId
-  const userId = currentUser?.id;  // 假设用户ID在currentUser.id中
+  const userId = currentUser?.id;  // 确保使用currentUser中的id
 
   // 使用 useCallback 包装函数，确保依赖项不变时函数引用不变
   const loadSessionMessages = useCallback(async (sid: number) => {
@@ -67,7 +67,7 @@ const AIChatBot = () => {
   const sendMessage = useCallback(async () => {
     if (!input.trim()) return;
     if (!userId) {
-      alert('Please login before using the AI assistant');
+      alert('请先登录后再使用AI助手');
       return;
     }
     
