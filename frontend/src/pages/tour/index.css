@@ -8,6 +8,11 @@
 }
 #cards {
   padding-top: 4vh;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2rem;
+  width: 90%;
+  margin: 0 auto;
 }
 #destinationContainer {
   display: flex;
@@ -25,4 +30,104 @@
   padding-top: 12vh;
   color: white;
   width: 70vw;
+}
+
+.tour-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tour-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* 通用按钮样式 */
+.btn {
+  transition: all 0.3s ease;
+  border-radius: 25px;
+  padding: 8px 20px;
+  font-weight: 500;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* 分享按钮样式 */
+.btn-primary.bg-orange-300 {
+  background-color: rgb(249, 151, 104) !important;
+  color: white;
+  font-size: 1.1rem;
+  padding: 10px 25px;
+}
+
+.btn-primary.bg-orange-300:hover {
+  background-color: rgb(245, 130, 75) !important;
+}
+
+/* 卡片按钮组样式 */
+.btn-sm {
+  padding: 6px 14px;
+  font-size: 0.9rem;
+}
+
+.btn-warning {
+  background-color: #ffd54f;
+  color: #333;
+}
+
+.btn-warning:hover {
+  background-color: #ffca28;
+}
+
+.btn-success {
+  background-color: #81c784;
+}
+
+.btn-success:hover {
+  background-color: #66bb6a;
+}
+
+.btn-danger {
+  background-color: #ef5350;
+}
+
+.btn-danger:hover {
+  background-color: #e53935;
+}
+
+/* 分页按钮样式优化 */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.pagination-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 20px;
+  background-color: #f4f4f4;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 40px;
+}
+
+.pagination-button:hover {
+  background-color: rgb(249, 151, 104);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(249, 151, 104, 0.3);
+}
+
+.pagination-button.active {
+  background-color: rgb(249, 151, 104);
+  color: white;
+  box-shadow: 0 2px 8px rgba(249, 151, 104, 0.3);
 }
