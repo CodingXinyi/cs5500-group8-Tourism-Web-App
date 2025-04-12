@@ -6,6 +6,7 @@ interface EditModalFormProps {
   show: boolean;
   onHide: () => void;
   post: Post | null; // 用于接收要编辑的 post
+  onUpdate?: (updatedPost: Post) => void;  // 添加新的回调属性
 }
 
 type Post = {
@@ -22,6 +23,7 @@ const EditModalForm: React.FC<EditModalFormProps> = ({
   show,
   onHide,
   post,
+  onUpdate,
 }) => {
   const [formData, setFormData] = useState({
     postName: '',
@@ -56,8 +58,11 @@ const EditModalForm: React.FC<EditModalFormProps> = ({
     if (!post) return;
 
     try {
-      await updatePost(post.id, formData);
-      onHide(); // 关闭弹窗
+      const updatedPost = await updatePost(post.id, formData);
+      if (onUpdate) {
+        onUpdate(updatedPost);  // 调用回调函数更新父组件状态
+      }
+      onHide();
     } catch (error) {
       console.error('Error updating post:', error);
     }

@@ -64,7 +64,13 @@ export default function Tour() {
   const handleShowModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
 
-  //const [targetId, setTargetID] = useState<string>('');
+  const handlePostUpdate = (updatedPost: Post) => {
+    setPosts(prevPosts => 
+      prevPosts.map(post => 
+        post.id === updatedPost.id ? updatedPost : post
+      )
+    );
+  };
 
   return (
     <div>
@@ -167,6 +173,7 @@ export default function Tour() {
           show={showEditModal}
           onHide={() => setShowEditModal(false)}
           post={selectedPost}
+          onUpdate={handlePostUpdate}
         />
       </div>
     </div>
