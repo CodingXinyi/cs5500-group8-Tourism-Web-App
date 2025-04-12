@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { sendPost } from '../../client/posts';
+import { AuthContext } from '../../context/authContext.js';
 
 interface ModalFormProps {
   show: boolean;
@@ -19,6 +20,7 @@ type postType = {
 };
 
 const ModalForm: React.FC<ModalFormProps> = ({ show, onHide }) => {
+  const { currentUser } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     rating: 5,
     location: '',
@@ -52,8 +54,13 @@ const ModalForm: React.FC<ModalFormProps> = ({ show, onHide }) => {
   };
 
   const handleSubmit = async () => {
+    if (!currentUser) {
+      alert('请先登录后再发布帖子');
+      return;
+    }
+
     const postData: postType = {
-      userId: 1, 
+      userId: currentUser.id,
       rating: formData.rating, 
       postName: formData.landmarkName,
       location: formData.location,
