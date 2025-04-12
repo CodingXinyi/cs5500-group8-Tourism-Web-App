@@ -9,6 +9,7 @@ import Signin from "./pages/signin";
 import Register from "./pages/register";
 import Destination from "./pages/tour/destination";
 import { AuthContextProvider } from "./context/authContext";
+import AIChatBot from './components/aiChatBot';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
               element={<Destination />}
             ></Route>
           </Routes>
+          <AIChatBot />
         </AuthContextProvider>
       </HashRouter>
     </div>
