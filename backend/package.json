@@ -8,7 +8,7 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "prisma:generate": "prisma generate",
         "build": "npm run prisma:generate",
-        "start": "node server/index.js"
+        "start": "node server/api.js"
     },
     "keywords": [],
     "author": "",
