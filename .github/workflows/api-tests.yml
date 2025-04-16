@@ -38,6 +38,8 @@ jobs:
         run: |
           cd backend
           npm install
+        env:
+          DATABASE_URL: postgresql://user:password@localhost:5432/testdb
           
       - name: Setup Prisma and database
         run: |
