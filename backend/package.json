@@ -7,7 +7,7 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "preinstall": "npm i -D prisma",
-        "postinstall": "npx prisma db push",
+        "postinstall": "npx prisma db push --schema=server/prisma/schema.prisma",
         "start": "node server/api.js"
     },
     "keywords": [],
