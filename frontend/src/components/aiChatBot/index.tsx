@@ -67,7 +67,7 @@ const AIChatBot = () => {
   const sendMessage = useCallback(async () => {
     if (!input.trim()) return;
     if (!userId) {
-      alert('请先登录后再使用AI助手');
+      alert('Please login before using the AI assistant');
       return;
     }
     
