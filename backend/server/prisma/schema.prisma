@@ -6,8 +6,9 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model Post {
@@ -46,7 +47,7 @@ model PostRating {
   userId    Int
   post      Post    @relation(fields: [postId], references: [id])
   postId    Int
-  rating    Float   @db.Float // Rating score (e.g., 1.0 to 5.0)
+  rating  Float  @db.DoublePrecision // Rating score (e.g., 1.0 to 5.0)
   createdAt DateTime @default(now())
 
   @@unique([userId, postId]) // Ensures a user can only rate a post once

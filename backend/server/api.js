@@ -30,8 +30,8 @@ app.use("/aiChat", aiChatRoutes);
 
 // conditionally start the server
 if (process.env.NODE_ENV !== 'test') {
-  app.listen(8000, () => {
-    console.log("Server running on http://localhost:8000 🎉 🚀");
+  app.listen(PORT, () => {
+    console.log("Server running on http://localhost: ${PORT} 🎉 🚀");
   });
 }
 

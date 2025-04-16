@@ -7,7 +7,8 @@ This web-based platform enables admins to manage tourism spot posts (create, rea
 
 # Add the following to the .env file
 ```
-DATABASE_URL="mysql://<user>:<password>@localhost:3306/postsdb"
+<!-- DATABASE_URL="mysql://<user>:<password>@localhost:3306/postsdb" -->
+DATABASE_URL="postgresql://xinyi:U9GQDEnR9eD35pw2m9lvpCvTgQfk8efJ@dpg-cvvfau24d50c739bbk80-a.oregon-postgres.render.com/wonderdb"
 GEMINI_API_KEY="<API_KEY>"
 ```
 # Prisma generate
