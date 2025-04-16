@@ -6,9 +6,8 @@
     "type": "module",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "prisma:generate": "prisma generate --schema=server/prisma/schema.prisma",
-        "postinstall": "npm run prisma:generate",
-        "build": "npm run prisma:generate",
+        "preinstall": "npm i -D prisma",
+        "postinstall": "npx prisma db push",
         "start": "node server/api.js"
     },
     "keywords": [],

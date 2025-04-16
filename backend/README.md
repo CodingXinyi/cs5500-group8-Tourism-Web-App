@@ -27,6 +27,8 @@ GEMINI_API_KEY="<API_KEY>"
 ```npx prisma studio --schema=server/prisma/schema.prisma```
 
 # Endpoints
+## Port
+```http://localhost:10000```
 
 ## Posts
 - `GET /posts` - Get all tourism spots
