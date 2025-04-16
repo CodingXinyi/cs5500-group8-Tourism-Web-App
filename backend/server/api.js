@@ -27,19 +27,13 @@ app.use("/comments", commentRoutes);
 app.use("/rating", ratingRoutes);
 app.use("/aiChat", aiChatRoutes);
 
-
 // conditionally start the server
-// if (process.env.NODE_ENV !== 'test') {
-//   app.listen(8000, () => {
-//     console.log("Server running on http://localhost:8000 🎉 🚀");
-//   });
-// }
-
-const port = process.env.PORT || 10000; // Ensure to use process.env.PORT for Render to set the correct port
-app.listen(port, '0.0.0.0', () => {
-  console.log(`Server running on http://localhost:${port} 🎉 🚀`);
-});
-
+if (process.env.NODE_ENV !== 'test') {
+  const port = process.env.PORT || 10000;
+  app.listen(port, '0.0.0.0', () => {
+    console.log(`Server running on http://localhost:${port} 🎉 🚀`);
+  });
+}
 
 // export app object for testing
 export default app;

@@ -26,6 +26,12 @@ router.post("/session", async (req, res) => {
 router.post("/message", async (req, res) => {
   try {
     const { sessionId, userId, message } = req.body;
+    
+    // 验证必要参数
+    if (!sessionId || !userId || !message) {
+      return res.status(400).json({ error: "Missing required fields: sessionId, userId, and message are required" });
+    }
+    
     const API_KEY = process.env.GEMINI_API_KEY;
     const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
     
