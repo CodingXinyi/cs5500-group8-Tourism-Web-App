@@ -35,9 +35,9 @@ app.use("/aiChat", aiChatRoutes);
 //   });
 // }
 
-const PORT = parseInt(process.env.PORT) || 10000;
-app.listen(PORT, () => {
- console.log(`Server running on http://localhost:${PORT} 🎉 🚀`);
+const port = process.env.PORT || 10000; // Ensure to use process.env.PORT for Render to set the correct port
+app.listen(port, '0.0.0.0', () => {
+  console.log(`Server running on http://localhost:${port} 🎉 🚀`);
 });
 
 
