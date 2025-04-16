@@ -11,18 +11,17 @@ jobs:
     runs-on: ubuntu-latest
     
     services:
-      # setup mysql test database
-      mysql:
-        image: mysql:8.0
+      # setup postgresql test database
+      postgres:
+        image: postgres:14
         env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: testdb
-          MYSQL_USER: user
-          MYSQL_PASSWORD: password
+          POSTGRES_PASSWORD: password
+          POSTGRES_USER: user
+          POSTGRES_DB: testdb
         ports:
-          - 3306:3306
+          - 5432:5432
         options: >-
-          --health-cmd="mysqladmin ping"
+          --health-cmd pg_isready
           --health-interval=10s
           --health-timeout=5s
           --health-retries=3
@@ -46,11 +45,11 @@ jobs:
           npx prisma generate --schema=server/prisma/schema.prisma
           npx prisma db push --schema=server/prisma/schema.prisma
         env:
-          DATABASE_URL: mysql://user:password@localhost:3306/testdb
+          DATABASE_URL: postgresql://user:password@localhost:5432/testdb
           
       - name: Run API tests
         run: |
           cd backend
           npx vitest
         env:
-          DATABASE_URL: mysql://user:password@localhost:3306/testdb 
+          DATABASE_URL: postgresql://user:password@localhost:5432/testdb 
