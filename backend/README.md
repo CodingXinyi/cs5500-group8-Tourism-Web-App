@@ -27,8 +27,8 @@ GEMINI_API_KEY="<API_KEY>"
 ```npx prisma studio --schema=server/prisma/schema.prisma```
 
 # Endpoints
-## Port
-```http://localhost:10000```
+## public URL
+```https://cs5500-group8-tourism-web-app.onrender.com```
 
 ## Posts
 - `GET /posts` - Get all tourism spots

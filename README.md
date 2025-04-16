@@ -19,3 +19,15 @@
 ```cd backend```
 ```npx prisma studio --schema=server/prisma/schema.prisma```
 
+
+## Deploy
+
+1. **Database (Render)**  
+   `DATABASE_URL="postgresql://xinyi:U9GQDEnR9eD35pw2m9lvpCvTgQfk8efJ@dpg-cvvfau24d50c739bbk80-a.oregon-postgres.render.com/wonderdb"`
+
+2. **API (Render)**  
+   Public URL: [https://cs5500-group8-tourism-web-app.onrender.com](https://cs5500-group8-tourism-web-app.onrender.com)
+
+3. **Web Client (Vercel)**  
+   [https://frontend-jdaluaeaa-liuxinyibi-gmailcoms-projects.vercel.app](https://frontend-jdaluaeaa-liuxinyibi-gmailcoms-projects.vercel.app)
+
