@@ -183,7 +183,7 @@ describe('AI Chat API Tests', () => {
         .post('/aiChat/message')
         .send({});
       
-      expect(response.status).toBe(500);
+      expect(response.status).toBe(400);
     });
 
     it('should handle AI API failure gracefully', async () => {
