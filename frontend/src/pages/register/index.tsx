@@ -22,7 +22,7 @@ const Register = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:8000/user", inputs);
+      const response = await axios.post("https://cs5500-group8-tourism-web-app.onrender.com/user", inputs);
       console.log("registration successful:", response.data);
       //window.location.href = "/login";
       navigate("/login");

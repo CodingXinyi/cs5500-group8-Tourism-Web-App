@@ -10,7 +10,7 @@ export const AuthContextProvider = ({ children }) => {
   const login = async (inputs) => {
     try {
       const res = await axios.post(
-        "http://localhost:8000/user/login",  // updated API endpoint
+        "https://cs5500-group8-tourism-web-app.onrender.com/user/login",  // updated API endpoint
         inputs
       );
       setCurrentUser(res.data);

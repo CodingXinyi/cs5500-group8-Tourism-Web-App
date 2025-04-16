@@ -25,7 +25,7 @@ const AIChatBot = () => {
   const loadSessionMessages = useCallback(async (sid: number) => {
     try {
       console.log(`Loading messages for ${sid}...`);
-      const response = await axios.get(`http://localhost:8000/aiChat/session/${sid}`);
+      const response = await axios.get(`https://cs5500-group8-tourism-web-app.onrender.com/aiChat/session/${sid}`);
       console.log('Messages loaded successfully:', response.data);
       const formattedMessages = response.data.map((msg: any) => ({
         role: msg.role,
@@ -46,7 +46,7 @@ const AIChatBot = () => {
 
     try {
       console.log('Creating chat session, user ID:', userId);
-      const response = await axios.post('http://localhost:8000/aiChat/session', { userId });
+      const response = await axios.post('https://cs5500-group8-tourism-web-app.onrender.com/aiChat/session', { userId });
       console.log('Session created successfully:', response.data);
       setSessionId(response.data.id);
       // 加载现有会话消息
@@ -77,7 +77,7 @@ const AIChatBot = () => {
       setMessages(prev => [...prev, userMessage]);
       setInput('');
 
-      const response = await axios.post('http://localhost:8000/aiChat/message', {
+      const response = await axios.post('https://cs5500-group8-tourism-web-app.onrender.com/aiChat/message', {
         sessionId,
         userId,
         message: input
