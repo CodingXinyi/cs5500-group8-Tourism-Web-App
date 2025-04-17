@@ -54,4 +54,20 @@
   color: #6c757d;
   font-size: 0.9rem;
   margin-top: 10px;
+}
+
+/* 评论操作按钮样式 */
+.comment-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.edit-btn {
+  margin-right: 10px;
+  font-size: 0.8rem;
+}
+
+.delete-btn {
+  font-size: 0.8rem;
 } 

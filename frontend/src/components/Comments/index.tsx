@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Form, Button, Card } from 'react-bootstrap';
-import { fetchPostComments, addComment } from '../../client/comments';
+import { Form, Button, Card, Modal } from 'react-bootstrap';
+import { fetchPostComments, addComment, deleteComment, updateComment } from '../../client/comments';
 import { AuthContext } from '../../context/authContext';
 import './styles.css';
 
@@ -24,6 +24,11 @@ const Comments: React.FC<CommentProps> = ({ postId }) => {
   const [newComment, setNewComment] = useState('');
   const [loading, setLoading] = useState(false);
   const { currentUser } = useContext(AuthContext);
+  const [editingComment, setEditingComment] = useState<CommentType | null>(null);
+  const [editedCommentText, setEditedCommentText] = useState('');
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [commentToDelete, setCommentToDelete] = useState<number | null>(null);
 
   // 获取评论
   const loadComments = async () => {
@@ -47,7 +52,7 @@ const Comments: React.FC<CommentProps> = ({ postId }) => {
     e.preventDefault();
     
     if (!currentUser) {
-      alert('Please login first to post a comment');
+      alert('请先登录后再发表评论');
       return;
     }
     
@@ -67,10 +72,54 @@ const Comments: React.FC<CommentProps> = ({ postId }) => {
     }
   };
 
+  // 打开编辑模态框
+  const handleEditClick = (comment: CommentType) => {
+    setEditingComment(comment);
+    setEditedCommentText(comment.comment);
+    setShowEditModal(true);
+  };
+
+  // 确认编辑评论
+  const handleEditSubmit = async () => {
+    if (!editingComment || !editedCommentText.trim()) return;
+    
+    try {
+      await updateComment(editingComment.id, editedCommentText);
+      await loadComments(); // 重新加载评论
+      setShowEditModal(false);
+    } catch (error) {
+      console.error('编辑评论失败:', error);
+    }
+  };
+
+  // 打开删除确认模态框
+  const handleDeleteClick = (commentId: number) => {
+    setCommentToDelete(commentId);
+    setShowDeleteModal(true);
+  };
+
+  // 确认删除评论
+  const handleDeleteConfirm = async () => {
+    if (commentToDelete === null) return;
+    
+    try {
+      await deleteComment(commentToDelete);
+      await loadComments(); // 重新加载评论
+      setShowDeleteModal(false);
+    } catch (error) {
+      console.error('删除评论失败:', error);
+    }
+  };
+
   // 格式化日期
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleString('en-US');
+  };
+
+  // 判断当前用户是否是评论作者
+  const isCommentAuthor = (comment: CommentType) => {
+    return currentUser && currentUser.id === comment.user.id;
   };
 
   return (
@@ -90,6 +139,26 @@ const Comments: React.FC<CommentProps> = ({ postId }) => {
                   <small>{formatDate(comment.createdAt)}</small>
                 </div>
                 <Card.Text>{comment.comment}</Card.Text>
+                {isCommentAuthor(comment) && (
+                  <div className="comment-actions">
+                    <Button 
+                      variant="outline-primary" 
+                      size="sm" 
+                      onClick={() => handleEditClick(comment)}
+                      className="edit-btn"
+                    >
+                      Edit
+                    </Button>
+                    <Button 
+                      variant="outline-danger" 
+                      size="sm" 
+                      onClick={() => handleDeleteClick(comment.id)}
+                      className="delete-btn"
+                    >
+                      Delete
+                    </Button>
+                  </div>
+                )}
               </Card.Body>
             </Card>
           ))
@@ -118,6 +187,51 @@ const Comments: React.FC<CommentProps> = ({ postId }) => {
         </Button>
         {!currentUser && <p className="login-prompt">Please login first to post a comment</p>}
       </Form>
+
+      {/* 编辑评论模态框 */}
+      <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Edit Comment</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Control
+            as="textarea"
+            rows={3}
+            value={editedCommentText}
+            onChange={(e) => setEditedCommentText(e.target.value)}
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowEditModal(false)}>
+            Cancel
+          </Button>
+          <Button 
+            variant="primary" 
+            onClick={handleEditSubmit}
+            disabled={!editedCommentText.trim()}
+          >
+            Save
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* 删除评论确认模态框 */}
+      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Delete</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to delete this comment? This action cannot be undone.
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={handleDeleteConfirm}>
+            Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };
