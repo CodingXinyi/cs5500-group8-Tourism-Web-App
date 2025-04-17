@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import './index.css';
 import Header from '../home/components/header';
 import { Link, useNavigate } from 'react-router-dom';
 import ModalForm from '../../components/inputPost';
 import EditModalForm from '../../components/editModal';
 import { deletePosts, getPost } from '../../client/posts';
+import { AuthContext } from '../../context/authContext';
 
 interface Post {
   id: string;
@@ -14,9 +15,15 @@ interface Post {
   description: string;
   policy: string;
   pictureUrl: string;
+  user: {
+    id: number;
+    name: string;
+    email: string;
+  };
 }
 
 export default function Tour() {
+  const { currentUser } = useContext(AuthContext);
   const [posts, setPosts] = useState<Post[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 20;
@@ -64,12 +71,30 @@ export default function Tour() {
   const handleShowModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
 
-  const handlePostUpdate = (updatedPost: Post) => {
+  const handlePostUpdate = (updatedPost: any) => {
+    const postWithUser = {
+      ...updatedPost,
+      user: selectedPost?.user
+    };
+    
     setPosts(prevPosts => 
       prevPosts.map(post => 
-        post.id === updatedPost.id ? updatedPost : post
+        post.id === updatedPost.id ? postWithUser : post
       )
     );
+  };
+
+  const handlePostCreated = (newPost: any) => {
+    const postWithUser = {
+      ...newPost,
+      user: {
+        id: currentUser?.id,
+        name: currentUser?.name,
+        email: currentUser?.email
+      }
+    };
+    
+    setPosts(prevPosts => [postWithUser, ...prevPosts]);
   };
 
   return (
@@ -97,7 +122,11 @@ export default function Tour() {
         >
           Share your Destinations!
         </button>
-        <ModalForm show={showModal} onHide={handleCloseModal} />
+        <ModalForm 
+          show={showModal} 
+          onHide={handleCloseModal} 
+          onPostCreated={handlePostCreated}
+        />
 
         <div
           className="row row-cols-1 row-cols-sm-2 row-cols-md-4"
@@ -138,21 +167,25 @@ export default function Tour() {
                   >
                     Go Now!
                   </button>
-                  <button
-                    className="btn btn-success btn-sm"
-                    onClick={() => {
-                      setSelectedPost(d);
-                      setShowEditModal(true); 
-                    }}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="btn btn-danger btn-sm"
-                    onClick={() => deletePost(d.id)}
-                  >
-                    Delete
-                  </button>
+                  {currentUser && currentUser.id === d.user?.id && (
+                    <>
+                      <button
+                        className="btn btn-success btn-sm"
+                        onClick={() => {
+                          setSelectedPost(d);
+                          setShowEditModal(true); 
+                        }}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="btn btn-danger btn-sm"
+                        onClick={() => deletePost(d.id)}
+                      >
+                        Delete
+                      </button>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
