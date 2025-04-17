@@ -133,7 +133,8 @@ router.get("/:id", async (req, res) => {
               select: {
                 id: true,
                 name: true,
-                email: true
+                email: true,
+                username: true
               }
             }
           },
@@ -174,7 +175,8 @@ router.get("/:postId/comments", async (req, res) => {
             select: {
                 id: true,
                 name: true,
-                email: true
+                email: true,
+                username: true
             }
             }
         },

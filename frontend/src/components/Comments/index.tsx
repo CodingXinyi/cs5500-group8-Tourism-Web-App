@@ -16,6 +16,7 @@ interface CommentType {
     id: number;
     name: string;
     email: string;
+    username: string;
   };
 }
 
@@ -135,7 +136,7 @@ const Comments: React.FC<CommentProps> = ({ postId }) => {
             <Card key={comment.id} className="comment-card">
               <Card.Body>
                 <div className="comment-header">
-                  <strong>{comment.user.name}</strong>
+                  <strong>{comment.user.username}</strong>
                   <small>{formatDate(comment.createdAt)}</small>
                 </div>
                 <Card.Text>{comment.comment}</Card.Text>

@@ -15,7 +15,14 @@ router.post("/", async (req, res) => {
         comment
       },
       include: {
-        user: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            username: true
+          }
+        },
         post: true
       }
     });
@@ -61,7 +68,8 @@ router.put("/:id", async (req, res) => {
           select: {
             id: true,
             name: true,
-            email: true
+            email: true,
+            username: true
           }
         }
       }

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // API基础URL - 使用与其他API相同的baseURL
-const API_BASE_URL = 'https://cs5500-group8-tourism-web-app.onrender.com';
+const API_BASE_URL = 'http://localhost:10000';
 
 // 获取特定帖子的所有评论
 export const fetchPostComments = async (postId: string | undefined) => {
