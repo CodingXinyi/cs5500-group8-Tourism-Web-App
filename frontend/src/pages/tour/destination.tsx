@@ -4,6 +4,7 @@ import Header from '../home/components/header';
 import { FaStar } from 'react-icons/fa6';
 import { useParams } from 'react-router';
 import { fetchPostDetails } from '../../client/posts';
+import Comments from '../../components/Comments';
 
 export default function Destination() {
   interface DestinationDetail {
@@ -87,6 +88,11 @@ export default function Destination() {
               marginBottom: '2vh',
             }}
           />
+          
+          {/* 添加评论组件 */}
+          <div className="destination-comments-container">
+            <Comments postId={destinationId} />
+          </div>
         </div>
       </div>
     </div>
