@@ -6,6 +6,7 @@ import { AuthContext } from '../../context/authContext.js';
 interface ModalFormProps {
   show: boolean;
   onHide: () => void;
+  onPostCreated?: (newPost: any) => void;
 }
 
 type postType = {
@@ -19,7 +20,7 @@ type postType = {
   pictureUrl: string;
 };
 
-const ModalForm: React.FC<ModalFormProps> = ({ show, onHide }) => {
+const ModalForm: React.FC<ModalFormProps> = ({ show, onHide, onPostCreated }) => {
   const { currentUser } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     rating: 5,
@@ -72,7 +73,21 @@ const ModalForm: React.FC<ModalFormProps> = ({ show, onHide }) => {
 
     console.log(postData); 
     try {
-      await sendPost(postData); 
+      const newPost = await sendPost(postData);
+      // 清空表单
+      setFormData({
+        rating: 5,
+        location: '',
+        landmarkName: '',
+        description: '',
+        introduction: '',
+        policy: '',
+        pictureUrl: '',
+      });
+      // 通知父组件
+      if (onPostCreated) {
+        onPostCreated(newPost);
+      }
       onHide(); 
     } catch (error) {
       console.error('提交失败:', error);

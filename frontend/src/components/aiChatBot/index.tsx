@@ -3,6 +3,9 @@ import axios from 'axios';
 import './index.scss';
 import { AuthContext } from '../../context/authContext';  // 调整路径以匹配你的项目结构
 
+// API基础URL
+const API_BASE_URL = 'http://localhost:10000';
+
 // 添加一个处理消息内容的函数
 const cleanMessageContent = (content: string) => {
   return content.replace(/\s*\*\s*/g, ', ');
@@ -25,7 +28,7 @@ const AIChatBot = () => {
   const loadSessionMessages = useCallback(async (sid: number) => {
     try {
       console.log(`Loading messages for ${sid}...`);
-      const response = await axios.get(`https://cs5500-group8-tourism-web-app.onrender.com/aiChat/session/${sid}`);
+      const response = await axios.get(`${API_BASE_URL}/aiChat/session/${sid}`);
       console.log('Messages loaded successfully:', response.data);
       const formattedMessages = response.data.map((msg: any) => ({
         role: msg.role,
@@ -46,7 +49,7 @@ const AIChatBot = () => {
 
     try {
       console.log('Creating chat session, user ID:', userId);
-      const response = await axios.post('https://cs5500-group8-tourism-web-app.onrender.com/aiChat/session', { userId });
+      const response = await axios.post(`${API_BASE_URL}/aiChat/session`, { userId });
       console.log('Session created successfully:', response.data);
       setSessionId(response.data.id);
       // 加载现有会话消息
@@ -67,7 +70,7 @@ const AIChatBot = () => {
   const sendMessage = useCallback(async () => {
     if (!input.trim()) return;
     if (!userId) {
-      alert('请先登录后再使用AI助手');
+      alert('please login first');
       return;
     }
     
@@ -77,7 +80,7 @@ const AIChatBot = () => {
       setMessages(prev => [...prev, userMessage]);
       setInput('');
 
-      const response = await axios.post('https://cs5500-group8-tourism-web-app.onrender.com/aiChat/message', {
+      const response = await axios.post(`${API_BASE_URL}/aiChat/message`, {
         sessionId,
         userId,
         message: input
