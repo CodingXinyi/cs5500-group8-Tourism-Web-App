@@ -129,8 +129,17 @@ const Register = () => {
                 <button 
                   type="button" 
                   onClick={sendVerificationCode}
-                  className={`verification-button ${isEmailVerified ? "verified" : ""}`}
+                  className={`${isEmailVerified ? "verified" : ""}`}
                   disabled={isEmailVerified}
+                  style={{ 
+                    width: "auto", 
+                    padding: "10px", 
+                    border: "none", 
+                    backgroundColor: isEmailVerified ? "#4CAF50" : "rgb(229, 151, 104)", 
+                    color: "white", 
+                    fontWeight: "bold", 
+                    cursor: isEmailVerified ? "not-allowed" : "pointer" 
+                  }}
                 >
                   {isEmailVerified ? "Verified" : "Send Verification Code"}
                 </button>
@@ -148,7 +157,15 @@ const Register = () => {
                   <button 
                     type="button" 
                     onClick={verifyCode}
-                    className="verify-code-button"
+                    style={{ 
+                      width: "auto", 
+                      padding: "10px", 
+                      border: "none", 
+                      backgroundColor: "rgb(229, 151, 104)", 
+                      color: "white", 
+                      fontWeight: "bold", 
+                      cursor: "pointer" 
+                    }}
                   >
                     Verify
                   </button>
