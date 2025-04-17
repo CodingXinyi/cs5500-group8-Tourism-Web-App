@@ -11,6 +11,26 @@ const cleanMessageContent = (content: string) => {
   return content.replace(/\s*\*\s*/g, ', ');
 };
 
+// 添加常用prompt列表
+const suggestionPrompts = [
+  {
+    text: "recommend the top 3 tourist destinations with the highest ratings",
+    icon: "⭐"
+  },
+  {
+    text: "recommend the top 3 tourist destinations with the most comments",
+    icon: "💬"
+  },
+  {
+    text: "find the best family-friendly tourist destinations",
+    icon: "👨‍👩‍👧"
+  },
+  {
+    text: "find the most popular outdoor activities",
+    icon: "🏞️"
+  }
+];
+
 const AIChatBot = () => {
   const { currentUser } = useContext(AuthContext);  // 从AuthContext获取当前用户
   const [isOpen, setIsOpen] = useState(false);
@@ -67,8 +87,8 @@ const AIChatBot = () => {
   }, [isOpen, sessionId, userId, createChatSession]);
 
   // 使用 useCallback 包装 sendMessage 函数
-  const sendMessage = useCallback(async () => {
-    if (!input.trim()) return;
+  const sendMessage = useCallback(async (messageText = input) => {
+    if (!messageText.trim()) return;
     if (!userId) {
       alert('please login first');
       return;
@@ -76,14 +96,14 @@ const AIChatBot = () => {
     
     setLoading(true);
     try {
-      const userMessage = { role: 'user', content: input };
+      const userMessage = { role: 'user', content: messageText };
       setMessages(prev => [...prev, userMessage]);
       setInput('');
 
       const response = await axios.post(`${API_BASE_URL}/aiChat/message`, {
         sessionId,
         userId,
-        message: input
+        message: messageText
       });
 
       const aiMessage = { role: 'assistant', content: response.data.content };
@@ -95,6 +115,12 @@ const AIChatBot = () => {
       setLoading(false);
     }
   }, [input, userId, sessionId]);
+
+  // 处理建议提示点击
+  const handleSuggestionClick = (prompt: string) => {
+    setInput(prompt);
+    sendMessage(prompt);
+  };
 
   return (
     <div className="ai-chatbot">
@@ -115,7 +141,21 @@ const AIChatBot = () => {
         <div className="chat-window">
           <div className="chat-messages">
             {messages.length === 0 && !loading && (
-              <div className="welcome-message">Hello! How can I help you?</div>
+              <div className="welcome-message">
+                <p>Hi, I'm your travel assistant. How can I help you?</p>
+                <div className="suggestion-prompts">
+                  {suggestionPrompts.map((prompt, index) => (
+                    <button 
+                      key={index} 
+                      className="suggestion-button"
+                      onClick={() => handleSuggestionClick(prompt.text)}
+                    >
+                      <span className="prompt-icon">{prompt.icon}</span>
+                      <span className="prompt-text">{prompt.text}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
             )}
             {messages.map((msg, index) => (
               <div key={index} className={`chat-message ${msg.role}`}>
@@ -137,7 +177,7 @@ const AIChatBot = () => {
               placeholder="Enter your question..."
               disabled={loading}
             />
-            <button onClick={sendMessage} disabled={loading}>
+            <button onClick={() => sendMessage()} disabled={loading}>
               Send
             </button>
           </div>
