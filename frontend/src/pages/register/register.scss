@@ -87,6 +87,45 @@
           font-weight: bold;
           cursor: pointer;
         }
+
+        .verification-button {
+          width: auto;
+          padding: 8px 15px;
+          border: none;
+          background-color: rgb(82, 113, 255);
+          color: white;
+          font-weight: bold;
+          border-radius: 5px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+          
+          &:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            box-shadow: none;
+          }
+          
+          &:hover:not(:disabled) {
+            background-color: rgb(65, 90, 204);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
+          }
+          
+          &:active:not(:disabled) {
+            transform: translateY(0);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+          }
+
+          &.verified {
+            background-color: #4CAF50;
+          }
+        }
+
+        .verify-code-button {
+          @extend .verification-button;
+          background-color: rgb(82, 113, 255);
+        }
       }
     }
   }
