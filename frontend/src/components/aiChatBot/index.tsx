@@ -4,7 +4,7 @@ import './index.scss';
 import { AuthContext } from '../../context/authContext';  // 调整路径以匹配你的项目结构
 
 // API基础URL
-const API_BASE_URL = 'http://localhost:10000';
+const API_BASE_URL = ' https://cs5500-group8-tourism-web-app.onrender.com';
 
 // 添加一个处理消息内容的函数
 const cleanMessageContent = (content: string) => {
