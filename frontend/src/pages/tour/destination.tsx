@@ -95,7 +95,8 @@ export default function Destination() {
   const calculateAverageRating = (ratings: { rating: number, userId: number }[]): number => {
     if (ratings.length === 0) return -1; // If no ratings, return 0
     const totalRating = ratings.reduce((acc, curr) => acc + curr.rating, 0);
-    return totalRating / ratings.length;
+    const average = totalRating / ratings.length;
+    return parseFloat(average.toFixed(1));
   };
 
   useEffect(() => {
@@ -124,6 +125,7 @@ export default function Destination() {
             <button 
               onClick={() => setIsRatingDialogOpen(true)} 
               className="rate-button"
+              disabled={!currentUser}
             >
               Rate This Destination
             </button>
