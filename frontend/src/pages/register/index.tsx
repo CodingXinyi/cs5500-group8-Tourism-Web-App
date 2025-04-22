@@ -46,7 +46,7 @@ const Register = () => {
       
       console.log('Sending verification code...');
       // 发送验证码到用户邮箱
-      const response = await axios.post("http://localhost:10000/user/send-verification", {
+      const response = await axios.post("https://cs5500-group8-tourism-web-app.onrender.com/user/send-verification", {
         email: inputs.email,
         code: generatedCode
       });
