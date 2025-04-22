@@ -29,5 +29,5 @@
    Public URL: [https://cs5500-group8-tourism-web-app.onrender.com](https://cs5500-group8-tourism-web-app.onrender.com)
 
 3. **Web Client (Vercel)**  
-   [https://cs5500-group8-tourism-web-24n4prlk8.vercel.app](https://cs5500-group8-tourism-web-24n4prlk8.vercel.app)
+   [https://frontend-2dm2nhezm-liuxinyibi-gmailcoms-projects.vercel.app](https://frontend-2dm2nhezm-liuxinyibi-gmailcoms-projects.vercel.app)
 
