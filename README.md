@@ -23,7 +23,7 @@
 ## Deploy
 
 1. **Database (Render)**  
-   `DATABASE_URL="postgresql://xinyi:U9GQDEnR9eD35pw2m9lvpCvTgQfk8efJ@dpg-cvvfau24d50c739bbk80-a.oregon-postgres.render.com/wonderdb"`
+   `DATABASE_URL="postgresql://xinyi:fa6G4iygGlK6n87eiAvYyAhsxMe7aFk6@dpg-d03ciamuk2gs73fk2g90-a.oregon-postgres.render.com/wonderdb_drhd"`
 
 2. **API (Render)**  
    Public URL: [https://cs5500-group8-tourism-web-app.onrender.com](https://cs5500-group8-tourism-web-app.onrender.com)

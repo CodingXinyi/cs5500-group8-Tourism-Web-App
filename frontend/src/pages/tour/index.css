@@ -149,3 +149,35 @@
     margin: 20px auto;
   }
 }
+
+
+.rating-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: nowrap;
+}
+
+.rating-header h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.rate-button {
+  width: 100%;
+  padding: 10px 16px;
+  background-color: #f59e0b;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.rate-button:hover {
+  background-color: #d97706;
+}
