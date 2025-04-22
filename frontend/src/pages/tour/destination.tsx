@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import './index.css';
 import Header from '../home/components/header';
 import { FaStar } from 'react-icons/fa6';
@@ -8,6 +8,7 @@ import Comments from '../../components/Comments';
 import { sendRating } from '../../client/rating';
 import { ListFormat } from 'typescript';
 import { RatingDialog } from './rating-dialog';
+import { AuthContext } from '../../context/authContext';
 
 
 export default function Destination() {
@@ -46,6 +47,7 @@ export default function Destination() {
   const [averageRating, setAverageRating] = useState<number>(-1);
   const [isRatingDialogOpen, setIsRatingDialogOpen] = useState<boolean>(false)
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
+  const { currentUser } = useContext(AuthContext);
   
 
   const fetchDetails = async () => {
@@ -70,7 +72,7 @@ export default function Destination() {
     setIsSubmitting(true)
 
     const ratingData: ratingType = {
-      userId: details.user.id,
+      userId: currentUser.id,
       postId: details.id,
       rating: parseFloat(userRating.toFixed(1)), // force float precision
     };    
